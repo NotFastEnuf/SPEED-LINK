@@ -3,6 +3,8 @@
 #define INDEX_H
 
 const char* htmlPage = R"rawliteral(
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -122,6 +124,12 @@ const char* htmlPage = R"rawliteral(
         #trip { font-size:36px; font-weight:bold; color:red; }
         #altitude { font-size :24px; font-weight:bold; }
         #maxAltitudeChange { font-size :36px; font-weight:bold; color:red; }
+        #gpsLatitude, #gpsLongitude, #gpsTime, #gpsDate, 
+        #gpsSpeed, #gpsCourse, #gpsAltitude, 
+        #gpsSatellites, #gpsHdop {
+            font-size: 24px; 
+            font-weight: bold; 
+        }
         button {
            margin :10px ;
            padding :10px 20px ;
@@ -129,88 +137,123 @@ const char* htmlPage = R"rawliteral(
            cursor :pointer ;
        }
     </style>
-    <script>
-        function showPage(pageId) {
-             var pages = document.getElementsByClassName('page');
-             for (var i = 0; i < pages.length; i++) {
-                 pages[i].classList.remove('active');
-             }
-             document.getElementById(pageId).classList.add('active');
-         }
+<script>
+    function showPage(pageId) {
+        var pages = document.getElementsByClassName('page');
+        for (var i = 0; i < pages.length; i++) {
+            pages[i].classList.remove('active');
+        }
+        document.getElementById(pageId).classList.add('active');
+    }
 
-         function toggleSettings() {
-             var settingsOverlay = document.getElementById('settingsOverlay');
-             settingsOverlay.style.display = 
-                 settingsOverlay.style.display === 'block' ? 'none' : 'block';
-         }
+    function toggleSettings() {
+        var settingsOverlay = document.getElementById('settingsOverlay');
+        settingsOverlay.style.display = 
+            settingsOverlay.style.display === 'block' ? 'none' : 'block';
+    }
 
-         function toggleDarkMode() {
-             document.body.classList.toggle('dark-mode');
-             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-         }
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
 
-         function toggleUnits() {
-             var unitsLabel = document.getElementById('unitsLabel');
-             if (unitsLabel.textContent === 'Metric') {
-                 unitsLabel.textContent = 'Imperial';
-                 localStorage.setItem('units', 'imperial');
-             } else {
-                 unitsLabel.textContent = 'Metric';
-                 localStorage.setItem('units', 'metric');
-             }
-             updateData();
-         }
+    function toggleUnits() {
+        var unitsLabel = document.getElementById('unitsLabel');
+        if (unitsLabel.textContent === 'Metric') {
+            unitsLabel.textContent = 'Imperial';
+            localStorage.setItem('units', 'imperial');
+        } else {
+            unitsLabel.textContent = 'Metric';
+            localStorage.setItem('units', 'metric');
+        }
+        updateData();
+    }
 
-         function updateData() {
-             fetch('/data')
-                 .then(response => response.text())
-                 .then(data => {
-                     const lines = data.split('<br>');
-                     document.getElementById('latitude').textContent = lines[0];
-                     document.getElementById('longitude').textContent = lines[1];
-                     document.getElementById('satellites').textContent = lines[2];
-                     document.getElementById('speed').textContent = lines[3];
-                     document.getElementById('maxSpeed').textContent = lines[4];
-                     document.getElementById('odometer').textContent = lines[5];
-                     document.getElementById('trip').textContent = lines[6];
-                     document.getElementById('altitude').textContent = lines[7];
-                     document.getElementById('maxAltitudeChange').textContent = lines[8];
-                 })
-                 .catch(error => {
-                     console.error('Fetch error:', error);
-                 });
-         }
+    function updateData() {
+        var activePage = document.querySelector('.page.active');
+        var pageId = activePage.id;
 
-         function clearMaxSpeed() {
-             fetch('/clearMaxSpeed')
-                 .then(() => updateData())
-                 .catch(error => console.error('Error clearing max speed:', error));
-         }
+        if (pageId === 'dashboard') {
+            updateDashboardData();
+        } else if (pageId === 'gps') {
+            updateGPSData();
+        } else if (pageId === 'race') {
+            updateRaceData();
+        }
+    }
 
-         function clearTrip() {
-             fetch('/clearTrip')
-                 .then(() => updateData())
-                 .catch(error => console.error('Error clearing trip:', error));
-         }
+    function updateDashboardData() {
+        fetch('/dashboarddata')
+            .then(response => response.text())
+            .then(data => {
+                const lines = data.split('<br>');
+                document.getElementById('speed').textContent = lines[0];
+                document.getElementById('maxSpeed').textContent = lines[1];
+                document.getElementById('odometer').textContent = lines[2];
+                document.getElementById('trip').textContent = lines[3];
+                document.getElementById('altitude').textContent = lines[4];
+                document.getElementById('maxAltitudeChange').textContent = lines[5];
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
 
-         function clearMaxAltitudeDelta() {
-             fetch('/clearMaxAltitudeDelta')
-                 .then(() => updateData())
-                 .catch(error => console.error('Error clearing max altitude change:', error));
-         }
+    function updateGPSData() {
+        fetch('/gpsdata')
+            .then(response => response.text())
+            .then(data => {
+                const lines = data.split('<br>');
+                document.getElementById('gpsLatitude').textContent = lines[0];
+                document.getElementById('gpsLongitude').textContent = lines[1];
+                document.getElementById('gpsTime').textContent = lines[2];
+                document.getElementById('gpsDate').textContent = lines[3];
+                document.getElementById('gpsSpeed').textContent = lines[4];
+                document.getElementById('gpsCourse').textContent = lines[5];
+                document.getElementById('gpsAltitude').textContent = lines[6];
+                document.getElementById('gpsSatellites').textContent = lines[7];
+                document.getElementById('gpsHdop').textContent = lines[8];
+           })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    }
 
-         window.onload = function() {
-             if (localStorage.getItem('darkMode') === 'true') {
-                 document.body.classList.add('dark-mode');
-                 document.getElementById('darkModeToggle').checked = true; 
-             } 
-             if (localStorage.getItem('units') === 'imperial') { 
-                 document.getElementById('unitsLabel').textContent = 'Imperial'; 
-                 document.getElementById('unitsToggle').checked = true; 
-             } 
-             setInterval(updateData, 1000);
-         }
-    </script>
+    function updateRaceData() {
+        // Implement race data fetching logic if needed
+    }
+
+    function clearMaxSpeed() {
+        fetch('/clearMaxSpeed')
+            .then(() => updateData())
+            .catch(error => console.error('Error clearing max speed:', error));
+    }
+
+    function clearTrip() {
+        fetch('/clearTrip')
+            .then(() => updateData())
+            .catch(error => console.error('Error clearing trip:', error));
+    }
+
+    function clearMaxAltitudeDelta() {
+        fetch('/clearMaxAltitudeDelta')
+            .then(() => updateData())
+            .catch(error => console.error('Error clearing max altitude change:', error));
+    }
+
+    window.onload = function() {
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeToggle').checked = true; 
+        } 
+        if (localStorage.getItem('units') === 'imperial') { 
+            document.getElementById('unitsLabel').textContent = 'Imperial'; 
+            document.getElementById('unitsToggle').checked = true; 
+        } 
+        setInterval(updateData, 1000);
+    }
+</script>
+
 </head>
 <body>
     <h1><i>SPEED-LINK</i></h1>
@@ -269,12 +312,17 @@ const char* htmlPage = R"rawliteral(
 
     <div id="gps" class="page">
         <h2>GPS Data</h2>
-        <div id="latitude">Latitude: <span>Loading...</span></div>
-        <div id="longitude">Longitude: <span>Loading...</span></div>
-        <div id="satellites">Satellites: <span>Loading...</span></div>
-        <div id="hdop">HDOP: <span>Loading...</span></div>
-        <div id="altitude">Altitude: <span>Loading...</span></div>
+        <p id="gpsLatitude">Latitude: <span>Loading...</span></p>
+        <p id="gpsLongitude">Longitude: <span>Loading...</span></p>
+        <p id="gpsTime">Time: <span>Loading...</span></p>
+        <p id="gpsDate">Date: <span>Loading...</span></p>
+        <p id="gpsSpeed">Current Speed: <span>Loading...</span></p>
+        <p id="gpsCourse">Course: <span>Loading...</span></p>
+        <p id="gpsAltitude">Altitude: <span>Loading...</span></p>
+        <p id="gpsSatellites">Satellites: <span>Loading...</span></p>
+        <p id="gpsHdop">HDOP: <span>Loading...</span></p>
     </div>
+
 
     <div class="nav-buttons">
         <button onclick="showPage('dashboard')">DASHBOARD</button>
@@ -284,6 +332,11 @@ const char* htmlPage = R"rawliteral(
 
 </body>
 </html>
+
+
+
+
 )rawliteral";
 
 #endif // INDEX_H
+

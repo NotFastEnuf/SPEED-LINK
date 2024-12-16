@@ -1,4 +1,4 @@
-# SPEED-LINK Dashboard
+# *SPEED-LINK* Dashboard
 
 SPEED-LINK Dashboard is a GPS-based tracking system for radio controlled vehicles, providing real-time performance data in a modern and accessible interface. This project combines affordable hardware and open source software to create an elite RC tool on your own.
 

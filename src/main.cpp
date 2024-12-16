@@ -107,7 +107,7 @@ void handleDashboardData() {
         }
         data += "Max Speed: " + String(maxSpeed, 2) + " mph<br>";
 
-        // Update odometer and trip distance
+        // Update odometer and trip distance  -  TODO - examine and compare using gps timestamps, arduino time, and ignoring time in odometer calculation
         unsigned long currentTime = millis();
         if (lastUpdateTime > 0) {
             float distanceTraveled = TinyGPSPlus::distanceBetween(

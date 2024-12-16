@@ -61,7 +61,6 @@ SPEED-LINK Dashboard is a GPS-based tracking system for radio controlled vehicle
 
 - If no GPS data is displayed, ensure the GPS module has a clear view of the sky and check wiring connections.  The D4 pin is connected to the onboard LED of the Wemos D1 Mini, it will flash on and off as serial data is received.
 - If the web interface doesn't load, verify you're connected to the correct WiFi network and check the IP address in the Serial Monitor.
-- For more accurate altitude readings, consider calibrating the GPS module or using a barometric sensor.
 
 ## License
 
@@ -73,7 +72,9 @@ Special thanks to the rc, open source, and maker communities as well as the libr
 
 ## Under Development
 
--race tab ...stage up scale 1/4 or 1/8 mile races.  race head to head using bluetooth.  report ET, trap speed, reaction time, false start
--units switch ...not supported yet
--altitude feature for jump height feature is only operating on raw gps data and needs further development.  Raw gps altitude can not hold a stable floor(slowly floats up and down) but very nicely will pick up jump.
--report trip distance in feet / meters to better evaluate inaccuracy
+- race tab ...stage up scale 1/4 or 1/8 mile races.  include large easy to see staging lights.  race head to head using bluetooth.  report ET, trap speed, reaction time, false start
+- units switch ...not supported yet
+- altitude feature for jump height feature is only operating on raw gps data and needs further development.  Raw gps altitude can not hold a stable floor(slowly floats up and down) but very nicely will pick up jump.
+- report trip distance in feet / meters to better evaluate inaccuracy
+- explore using the gps module tx pin to put the gps in 10hz mode for more accurate readings
+- explore some sort of interaction between the rc controller and the SPEED-LINK system by listening to an aux channel on vehicle receiver

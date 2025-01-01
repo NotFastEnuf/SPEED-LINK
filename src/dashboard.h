@@ -1,4 +1,4 @@
-void handleDashboardData();
+void handleDashboardDisplay();
 void handleClearMaxSpeed();
 void handleClearTrip();
 void handleClearMaxAltitudeDelta();

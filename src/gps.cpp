@@ -1,6 +1,6 @@
 #include <globals.h>
 
-void handleGPSData() {
+void handleGPSDisplay() {
     String data = "";
     
     if (gps.location.isValid()) {

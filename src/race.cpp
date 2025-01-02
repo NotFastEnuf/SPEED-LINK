@@ -7,7 +7,7 @@ float lastSpeed = 0;
 float trapSpeed = 0;
 float elapsedTime = 0;
 float reactionTime = 0;
-float raceDistance = 0; // Set this based on race type
+float raceDistance = 132; // Set this based on race type
 
 enum RaceState { 
     INACTIVE, 
@@ -15,9 +15,9 @@ enum RaceState {
     STAGE, 
     YELLOW1, 
     YELLOW2, 
-    YELLOW3, 
+    YELLOW3,
+    RED_LIGHT, 
     GREEN_LIGHT, 
-    RED_LIGHT,
     VEHICLE_START, 
     RACING, 
     FINISHED 
@@ -44,6 +44,7 @@ void handleRaceLogic() {
     raceRequested = false; 
     currentRaceState = INACTIVE;
     return;
+  
   }
 
   switch(currentRaceState) {
@@ -82,7 +83,6 @@ void handleRaceLogic() {
 
     case YELLOW1:
       if (gps.speed.isValid() && gps.speed.mph() > 1) {
-          reactionTime = (millis() - greenLightTime) / 1000.0;
           currentRaceState = RED_LIGHT;
       }
       if (millis() - yellowStartTime >= 500) {
@@ -92,7 +92,6 @@ void handleRaceLogic() {
 
     case YELLOW2:
       if (gps.speed.isValid() && gps.speed.mph() > 1) {
-          reactionTime = (millis() - greenLightTime) / 1000.0;
           currentRaceState = RED_LIGHT;
       }
       if (millis() - yellowStartTime >= 1000) {
@@ -102,7 +101,6 @@ void handleRaceLogic() {
 
     case YELLOW3:
       if (gps.speed.isValid() && gps.speed.mph() > 1) {
-          reactionTime = (millis() - greenLightTime) / 1000.0;
           currentRaceState = RED_LIGHT;
       }
       if (millis() - yellowStartTime >= 1500) {
@@ -110,20 +108,18 @@ void handleRaceLogic() {
         greenLightTime = millis();
       }
       break;
+    
+    case RED_LIGHT:
+      // Handle red light condition (false start)
+      reactionTime = (millis() - greenLightTime) / 1000.0;
+      currentRaceState = VEHICLE_START;
+      break;
 
     case GREEN_LIGHT:
       if (gps.speed.isValid() && gps.speed.mph() > 1) {
         reactionTime = (millis() - greenLightTime) / 1000.0;
         currentRaceState = VEHICLE_START;
       }
-      break;
-
-    case RED_LIGHT:
-      // Handle red light condition (false start)
-      currentRaceState = VEHICLE_START;
-      // You might want to add a delay here before resetting to INACTIVE
-      // delay(3000);
-      // currentRaceState = INACTIVE;
       break;
 
     case VEHICLE_START:
@@ -142,8 +138,11 @@ void handleRaceLogic() {
           lastLat = gps.location.lat();
           lastLon = gps.location.lng();
           lastSpeed = gps.speed.mph();
+          unsigned long timeNow = millis();
+          elapsedTime = (timeNow - vehicleStartTime)/1000;
         }
       }
+      //update elapsed time here
       break;
 
     case FINISHED:
@@ -170,70 +169,126 @@ void handleRaceLogic() {
 
 
 void handleStartRace() {
+  raceRequested = true;
   currentRaceState = PRE_STAGE;
   // Initialize race variables
-  //set race distance here in meters **************  NOTHING IS GOING TO WORK WITHOUT HANDLING THIS
-  server.send(200, "text/plain", "Race started");
+  // TODO: Set race distance here in meters
+  
+  // Create a JSON response with more information
+  DynamicJsonDocument doc(256);
+  doc["message"] = "Race started";
+  doc["raceState"] = "PRE_STAGE";
+  doc["raceDistance"] = raceDistance;  // Assuming raceDistance is a global variable
+
+  String response;
+  serializeJson(doc, response);
+  
+  //Serial.println("Race start request received. Sending response: " + response);  // Log to serial monitor
+  server.send(200, "application/json", response);
 }
+
 
 void handleCancelRace() {
   currentRaceState = INACTIVE;
   // Reset race variables
-  server.send(200, "text/plain", "Race cancelled");
+  lastMovementTime = 0;
+  stationaryStartTime = 0;
+  lastLat = 0, lastLon = 0;
+  lastSpeed = 0;
+  trapSpeed = 0;
+  elapsedTime = 0;
+  reactionTime = 0;
+  server.send(200, "application/json", "{\"message\":\"Race cancelled\"}");
 }
+
+
+
+void handleUpdateRaceDistance() {
+    if (server.hasArg("plain")) {
+        String body = server.arg("plain");
+        
+        DynamicJsonDocument doc(1024);
+        DeserializationError error = deserializeJson(doc, body);
+        
+        if (error) {
+            server.send(400, "application/json", "{\"error\":\"Invalid JSON\"}");
+            return;
+        }
+        
+        if (!doc.containsKey("distance")) {
+            server.send(400, "application/json", "{\"error\":\"Missing distance parameter\"}");
+            return;
+        }
+        
+        int distance = doc["distance"];
+        raceDistance = distance;
+        
+        server.send(200, "application/json", "{\"message\":\"Race distance updated\",\"distance\":" + String(distance) + "}");
+    } else {
+        server.send(400, "application/json", "{\"error\":\"Invalid request\"}");
+    }
+}
+
 
 // Helper function to convert RaceState enum to string
 String getRaceStateName(RaceState state) {
     switch(state) {
-        case INACTIVE: return "Inactive";
-        case PRE_STAGE: return "Pre-Stage";
-        case STAGE: return "Stage";
-        case GREEN_LIGHT: return "Green Light";
-        case VEHICLE_START: return "Vehicle Start Detected";
-        case RACING: return "Racing";
-        case FINISHED: return "Finished";
+        case INACTIVE: return "INACTIVE";
+        case PRE_STAGE: return "PRE_STAGE";
+        case STAGE: return "STAGE";
+        case YELLOW1: return "YELLOW1";
+        case YELLOW2: return "YELLOW2";
+        case YELLOW3: return "YELLOW3";
+        case RED_LIGHT: return "RED_LIGHT";
+        case GREEN_LIGHT: return "GREEN_LIGHT";
+        case VEHICLE_START: return "VEHICLE_START";
+        case RACING: return "RACING";
+        case FINISHED: return "FINISHED";
         default: return "Unknown";
     }
 }
 
 void handleRaceDisplay() {
-    String data = "";
+    DynamicJsonDocument doc(1024);
+    
     if (gps.location.isValid()) {
-        data += "Race State: " + String(getRaceStateName(currentRaceState)) + "<br>";
-        data += "Latitude: " + String(gps.location.lat(), 6) + "<br>";
-        data += "Longitude: " + String(gps.location.lng(), 6) + "<br>";
-        data += "Speed: " + String(gps.speed.mph()) + " mph<br>";
+        doc["raceState"] = getRaceStateName(currentRaceState);
+        doc["raceDistance"] = raceDistance;
+        doc["currentSpeed"] = gps.speed.mph();
         
         switch(currentRaceState) {
+            case INACTIVE:
+                break;
             case PRE_STAGE:
-                data += "Waiting for vehicle to be stationary...<br>";
-                break;
             case STAGE:
-                data += "Vehicle staged. Waiting for final positioning...<br>";
+                // No additional data needed
                 break;
+            case RED_LIGHT:
+                doc["reactionTime"] = reactionTime;
+                doc["elapsedTime"] = elapsedTime;
+                break;
+            case YELLOW1:
+            case YELLOW2:
+            case YELLOW3:
             case GREEN_LIGHT:
-                data += "GREEN LIGHT! GO!<br>";
-                break;
             case VEHICLE_START:
-                data += "Reaction time: " + String(reactionTime) + " seconds<br>";
-                break;
+                doc["reactionTime"] = reactionTime;
+                doc["elapsedTime"] = elapsedTime;
             case RACING:
-                data += "Distance traveled: " + String(TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng())) + " meters<br>";
-                data += "Elapsed time: " + String((millis() - vehicleStartTime) / 1000.0) + " seconds<br>";
-                break;
+                doc["reactionTime"] = reactionTime;
+                doc["elapsedTime"] = elapsedTime;
             case FINISHED:
-                data += "Race finished!<br>";
-                data += "Final E/T: " + String(elapsedTime) + " seconds<br>";
-                data += "Trap speed: " + String(trapSpeed) + " mph<br>";
-                break;
-            default:
-                data += "Waiting for race to start...<br>";
+                 doc["trapSpeed"] = trapSpeed; 
+                 doc["elapsedTime"] = elapsedTime;   
         }
     } else {
-        data += "GPS signal not valid<br>";
+        doc["error"] = "GPS signal not valid";
     }
 
-    server.send(200, "text/plain", data);
+    String response;
+    serializeJson(doc, response);
+    server.send(200, "application/json", response);
 }
+
 
 

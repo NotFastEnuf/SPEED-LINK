@@ -32,9 +32,10 @@ void setup() {
     server.on("/clearMaxSpeed", handleClearMaxSpeed);
     server.on("/clearTrip", handleClearTrip);
     server.on("/clearMaxAltitudeDelta", handleClearMaxAltitudeDelta);
-    server.on("/raceData", handleRaceDisplay);
-    //server.on("/startrace", handleStartRace);
-    //server.on("/cancelrace", handleCancelRace);
+    server.on("/racedata", HTTP_GET, handleRaceDisplay);
+    server.on("/startRace", HTTP_POST, handleStartRace);
+    server.on("/clearRace", HTTP_POST, handleCancelRace);
+    server.on("/updateRaceDistance", HTTP_POST, handleUpdateRaceDistance);
     server.begin();
     Serial.println("HTTP server started.");
 }

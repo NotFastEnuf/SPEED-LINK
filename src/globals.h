@@ -2,6 +2,7 @@
 #define GLOBALS_H
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <SoftwareSerial.h>

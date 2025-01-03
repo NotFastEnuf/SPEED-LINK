@@ -2,7 +2,6 @@
 
 static double lastLat = 0;
 static double lastLon = 0;
-static unsigned long lastUpdateTime = 0;
 
 float maxSpeed = 0;
 float odometer = 0;
@@ -50,7 +49,7 @@ void updateTracking () {
                 maxAltitudeChange = altitudeChange;
             }
         }
-        
+
     } else {
         //no updates
     }

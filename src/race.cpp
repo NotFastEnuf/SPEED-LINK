@@ -16,7 +16,8 @@ unsigned long raceFinishTime = 0;
 static bool raceRequested = false;
 
 enum RaceState { 
-    INACTIVE, 
+    INACTIVE,
+    RACE_REQUESTED, 
     PRE_STAGE, 
     STAGE, 
     YELLOW1, 
@@ -40,7 +41,7 @@ void handleRaceLogic() {
       // No Activity
       break;
 
-    case PRE_STAGE:
+    case RACE_REQUESTED:  //USER INSTRUCTIONS:  Enter the staging area and remain still for 3 seconds
       if (gps.location.isValid()) {
         if (lastLat == 0 && lastLon == 0) {
           lastLat = gps.location.lat();
@@ -48,7 +49,7 @@ void handleRaceLogic() {
           stationaryStartTime = millis();
         } else if (TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) < 0.5) {
           if (millis() - stationaryStartTime >= 3000) {
-            currentRaceState = STAGE;
+            currentRaceState = PRE_STAGE;
           }
         } else {
           lastLat = gps.location.lat();
@@ -58,11 +59,31 @@ void handleRaceLogic() {
       }
       break;
 
-    case STAGE:  //totally broken
+    case PRE_STAGE:   //Advance to the starting line
       if (gps.location.isValid()) {
-        if (TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) > 0.5) {
-          lastMovementTime = millis();
-        } else if (millis() - lastMovementTime >= 3000) {
+        if (TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) < 1.0) {
+          //just stay in this state with pre-stage light lit wiiting for the driver to advance 
+        } else {  //assume the driver has advanced to the starting line and trigger stage lights
+           currentRaceState = STAGE;
+           lastLat = gps.location.lat();
+           lastLon = gps.location.lng();
+           stationaryStartTime = millis();
+        }
+
+      }
+      break;
+
+    case STAGE:  //Wait for Signal to GO
+      if (gps.location.isValid()) {  //be still for 3 seconds to trigger the starting sequence
+
+        //if movement is more than half a meter from the last spot
+        if (TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) >= 0.5) {
+          // Movement detected, reset timer and update position
+          stationaryStartTime = millis();
+          lastLat = gps.location.lat();
+          lastLon = gps.location.lng();
+        } else if (millis() - stationaryStartTime >= 3000) {
+          // 3 seconds of stillness detected
           currentRaceState = YELLOW1;
           yellowStartTime = millis();
         }
@@ -168,13 +189,13 @@ void resetRaceGlobals (void) {
 
 void handleStartRace() {
   raceRequested = true;
-  currentRaceState = PRE_STAGE;
+  currentRaceState = RACE_REQUESTED;
   resetRaceGlobals();
   
   // Create a JSON response with more information
   DynamicJsonDocument doc(256);
   doc["message"] = "Race started";
-  doc["raceState"] = "PRE_STAGE";
+  doc["raceState"] = "RACE_REQUESTED";
   doc["raceDistance"] = raceDistance;  // Assuming raceDistance is a global variable
   String response;
   serializeJson(doc, response);
@@ -218,6 +239,7 @@ void handleUpdateRaceDistance() {
 String getRaceStateName(RaceState state) {
     switch(state) {
         case INACTIVE: return "INACTIVE";
+        case RACE_REQUESTED: return "RACE_REQUESTED";
         case PRE_STAGE: return "PRE_STAGE";
         case STAGE: return "STAGE";
         case YELLOW1: return "YELLOW1";

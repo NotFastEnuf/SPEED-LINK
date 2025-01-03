@@ -337,6 +337,10 @@ function updateRaceTree(state) {
    if (state === 'INACTIVE') return;
 
    switch(state) {
+       case 'RACE_REQUESTED':
+           //nothing yet - wait for pre_stage conditions to be met
+           break;
+
        case 'PRE_STAGE':
            document.querySelectorAll('.prestage').forEach(light => light.classList.add('active'));
            break;

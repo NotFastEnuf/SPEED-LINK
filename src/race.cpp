@@ -188,9 +188,9 @@ void resetRaceGlobals (void) {
 
 
 void handleStartRace() {
+  resetRaceGlobals();
   raceRequested = true;
   currentRaceState = RACE_REQUESTED;
-  resetRaceGlobals();
   
   // Create a JSON response with more information
   DynamicJsonDocument doc(256);
@@ -205,9 +205,9 @@ void handleStartRace() {
 
 
 void handleCancelRace() {
+  resetRaceGlobals();
   raceRequested = false;
   currentRaceState = INACTIVE;
-  resetRaceGlobals();
   server.send(200, "application/json", "{\"message\":\"Race cancelled\"}");
 }
 

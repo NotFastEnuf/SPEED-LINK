@@ -1,19 +1,6 @@
 #include <globals.h>
 
 
-/* New variables for distance calculation
-static double lastLat = 0;
-static double lastLon = 0;
-static unsigned long lastUpdateTime = 0;
-
-float maxSpeed = 0;
-float odometer = 0;
-float tripDistance = 0;
-float maxAltitudeChange = 0;
-float initialAltitude = 0;
-bool isInitialAltitudeSet = false;
-*/
-
 void handleDashboardDisplay() {
     String data = "";
     if (gps.location.isValid()) {
@@ -30,7 +17,6 @@ void handleDashboardDisplay() {
     } else {
         data += "GPS signal not valid<br>";
     }
-
     server.send(200, "text/plain", data);
 }
 

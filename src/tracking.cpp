@@ -23,7 +23,6 @@ void updateTracking () {
             maxSpeed = currentSpeed;
         }
 
-
         //Odometer
         if (lastLat == 0 || lastLon == 0) {
             lastLat = gps.location.lat();
@@ -39,8 +38,6 @@ void updateTracking () {
         lastLat = gps.location.lat();
         lastLon = gps.location.lng();
 
-
-
         // Altimeter
         if (gps.altitude.isValid()) { // Check if altitude is valid
             currentAltitude = gps.altitude.feet();
@@ -53,9 +50,7 @@ void updateTracking () {
                 maxAltitudeChange = altitudeChange;
             }
         }
-
         
-
     } else {
         //no updates
     }

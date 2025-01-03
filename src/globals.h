@@ -11,8 +11,6 @@
 extern ESP8266WebServer server;
 extern TinyGPSPlus gps;
 
-
-
 extern float currentSpeed;
 extern float currentAltitude;
 extern float maxSpeed;

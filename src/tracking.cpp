@@ -25,6 +25,10 @@ void updateTracking () {
 
 
         //Odometer
+        if (lastLat == 0 || lastLon == 0) {
+            lastLat = gps.location.lat();
+            lastLon = gps.location.lng();
+        }
         float distanceTraveled = TinyGPSPlus::distanceBetween(
             lastLat, lastLon,
             gps.location.lat(), gps.location.lng()
@@ -34,7 +38,6 @@ void updateTracking () {
         // Update last known position
         lastLat = gps.location.lat();
         lastLon = gps.location.lng();
-        lastUpdateTime = gps.time.value();
 
 
 

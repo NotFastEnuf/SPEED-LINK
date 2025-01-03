@@ -282,38 +282,40 @@ function updateRaceData() {
    fetch('/racedata')
        .then(response => response.json())
        .then(data => {
-           //console.log("Raw race data:", data);  // Log the entire data object
-
            document.getElementById('raceState').innerHTML = `Race State: <span>${data.raceState || 'N/A'}</span>`;
            document.getElementById('raceDistance').innerHTML = `Race Distance: <span>${data.raceDistance || 'N/A'}</span> feet`;
-           document.getElementById('currentSpeed').innerHTML = `Current Speed: <span>${data.currentSpeed || 'N/A'}</span> mph`;
 
+           const currentSpeedElement = document.getElementById('currentSpeed');
            const reactionTimeElement = document.getElementById('reactionTime');
            const elapsedTimeElement = document.getElementById('elapsedTime');
            const trapSpeedElement = document.getElementById('trapSpeed');
 
+           if (data.raceState === 'FINISHED') {
+               currentSpeedElement.classList.add('hidden');
+               trapSpeedElement.classList.remove('hidden');
+               trapSpeedElement.innerHTML = `Trap Speed: <span>${data.trapSpeed !== undefined ? data.trapSpeed : 'N/A'}</span> mph`;
+           } else {
+               currentSpeedElement.classList.remove('hidden');
+               currentSpeedElement.innerHTML = `Current Speed: <span>${data.currentSpeed || 'N/A'}</span> mph`;
+               trapSpeedElement.classList.add('hidden');
+           }
+
            if (['RACING', 'FINISHED', 'RED_LIGHT'].includes(data.raceState)) {
                reactionTimeElement.classList.remove('hidden');
                elapsedTimeElement.classList.remove('hidden');
-
-               // Directly output the values without converting to strings
                reactionTimeElement.innerHTML = `Reaction Time: <span>${data.reactionTime !== undefined ? data.reactionTime : 'N/A'}</span> seconds`;
                elapsedTimeElement.innerHTML = `Elapsed Time: <span>${data.elapsedTime !== undefined ? data.elapsedTime : 'N/A'}</span> seconds`;
-
-               if (['FINISHED'].includes(data.raceState)) {
-                    trapSpeedElement.classList.remove('hidden');
-                    trapSpeedElement.innerHTML = `Trap Speed: <span>${data.trapSpeed !== undefined ? data.trapSpeed : 'N/A'}</span> mph`;
-               }
            } else {
                reactionTimeElement.classList.add('hidden');
                elapsedTimeElement.classList.add('hidden');
-               trapSpeedElement.classList.add('hidden');
            }
 
            updateRaceTree(data.raceState);
        })
        .catch(error => console.error('Error fetching race data:', error));
 }
+
+
 
 
 function updateRaceTree(state) {

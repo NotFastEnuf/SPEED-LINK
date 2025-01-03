@@ -8,6 +8,12 @@ float trapSpeed = 0;
 float elapsedTime = 0;
 float reactionTime = 0;
 float raceDistance = 132; // Set this based on race type
+unsigned long greenLightTime = 0;
+unsigned long yellowStartTime = 0;
+unsigned long vehicleStartTime = 0;
+unsigned long raceFinishTime = 0;
+
+static bool raceRequested = false;
 
 enum RaceState { 
     INACTIVE, 
@@ -23,14 +29,8 @@ enum RaceState {
     FINISHED 
 };
 RaceState currentRaceState = INACTIVE;
-unsigned long greenLightTime = 0;
-unsigned long yellowStartTime = 0;
-unsigned long vehicleStartTime = 0;
-unsigned long raceFinishTime = 0;
 
 
-static bool raceRequested = false;
-static bool raceCancelled = false;
 
 
 
@@ -38,14 +38,6 @@ static bool raceCancelled = false;
 
 void handleRaceLogic() {
   if (!raceRequested) return;
-
-  if (raceCancelled) {
-    raceCancelled = false;
-    raceRequested = false; 
-    currentRaceState = INACTIVE;
-    return;
-  
-  }
 
   switch(currentRaceState) {
     case INACTIVE:
@@ -70,7 +62,7 @@ void handleRaceLogic() {
       }
       break;
 
-    case STAGE:
+    case STAGE:  //totally broken
       if (gps.location.isValid()) {
         if (TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) > 0.5) {
           lastMovementTime = millis();
@@ -124,6 +116,8 @@ void handleRaceLogic() {
 
     case VEHICLE_START:
       vehicleStartTime = millis();
+      lastLat = gps.location.lat();
+      lastLon = gps.location.lng();
       currentRaceState = RACING;
       break;
 
@@ -135,8 +129,6 @@ void handleRaceLogic() {
         if (distanceTraveled >= (raceDistance * 0.3048)) {
           currentRaceState = FINISHED;
         } else {
-          lastLat = gps.location.lat();
-          lastLon = gps.location.lng();
           lastSpeed = gps.speed.mph();
           unsigned long timeNow = millis();
           elapsedTime = (timeNow - vehicleStartTime)/1000;
@@ -150,47 +142,20 @@ void handleRaceLogic() {
       float overshoot = TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) - (raceDistance * 0.3048);
       float totalDistance = TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng());
       float interpolationFactor = 1 - (overshoot / totalDistance);
-      
+      // Record final results
       trapSpeed = lastSpeed + (gps.speed.mph() - lastSpeed) * interpolationFactor;
       unsigned long finishTime = millis();
       elapsedTime = ((finishTime - vehicleStartTime)/1000) * interpolationFactor;
-      
-      // Record final results
       // Reset race state
       raceRequested = false;
-      currentRaceState = INACTIVE;
       break;
   }
 }
 
 
 
-
-
-
-void handleStartRace() {
-  raceRequested = true;
-  currentRaceState = PRE_STAGE;
-  // Initialize race variables
-  // TODO: Set race distance here in meters
-  
-  // Create a JSON response with more information
-  DynamicJsonDocument doc(256);
-  doc["message"] = "Race started";
-  doc["raceState"] = "PRE_STAGE";
-  doc["raceDistance"] = raceDistance;  // Assuming raceDistance is a global variable
-
-  String response;
-  serializeJson(doc, response);
-  
-  //Serial.println("Race start request received. Sending response: " + response);  // Log to serial monitor
-  server.send(200, "application/json", response);
-}
-
-
-void handleCancelRace() {
-  currentRaceState = INACTIVE;
-  // Reset race variables
+void resetRaceGlobals (void) {
+// Reset race variables
   lastMovementTime = 0;
   stationaryStartTime = 0;
   lastLat = 0, lastLon = 0;
@@ -198,6 +163,36 @@ void handleCancelRace() {
   trapSpeed = 0;
   elapsedTime = 0;
   reactionTime = 0;
+  greenLightTime = 0;
+  yellowStartTime = 0;
+  vehicleStartTime = 0;
+  raceFinishTime = 0;
+}
+
+
+void handleStartRace() {
+  raceRequested = true;
+  currentRaceState = PRE_STAGE;
+  resetRaceGlobals();
+  // TODO: Set race distance here in meters
+  
+  // Create a JSON response with more information
+  DynamicJsonDocument doc(256);
+  doc["message"] = "Race started";
+  doc["raceState"] = "PRE_STAGE";
+  doc["raceDistance"] = raceDistance;  // Assuming raceDistance is a global variable
+  String response;
+  serializeJson(doc, response);
+  //Serial.println("Race start request received. Sending response: " + response);  // Log to serial monitor
+  server.send(200, "application/json", response);
+}
+
+
+
+void handleCancelRace() {
+  raceRequested = false;
+  currentRaceState = INACTIVE;
+  resetRaceGlobals();
   server.send(200, "application/json", "{\"message\":\"Race cancelled\"}");
 }
 
@@ -255,6 +250,10 @@ void handleRaceDisplay() {
         doc["raceState"] = getRaceStateName(currentRaceState);
         doc["raceDistance"] = raceDistance;
         doc["currentSpeed"] = gps.speed.mph();
+        doc["reactionTime"] = reactionTime;
+        doc["elapsedTime"] = elapsedTime;
+        doc["trapSpeed"] = trapSpeed; 
+        /*
         
         switch(currentRaceState) {
             case INACTIVE:
@@ -278,9 +277,10 @@ void handleRaceDisplay() {
                 doc["reactionTime"] = reactionTime;
                 doc["elapsedTime"] = elapsedTime;
             case FINISHED:
-                 doc["trapSpeed"] = trapSpeed; 
-                 doc["elapsedTime"] = elapsedTime;   
-        }
+                 doc["reactionTime"] = reactionTime;
+                 doc["elapsedTime"] = elapsedTime;
+                 doc["trapSpeed"] = trapSpeed;  
+        }*/
     } else {
         doc["error"] = "GPS signal not valid";
     }

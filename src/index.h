@@ -290,6 +290,7 @@ function updateRaceData() {
 
            const reactionTimeElement = document.getElementById('reactionTime');
            const elapsedTimeElement = document.getElementById('elapsedTime');
+           const trapSpeedElement = document.getElementById('trapSpeed');
 
            if (['RACING', 'FINISHED', 'RED_LIGHT'].includes(data.raceState)) {
                reactionTimeElement.classList.remove('hidden');
@@ -298,9 +299,15 @@ function updateRaceData() {
                // Directly output the values without converting to strings
                reactionTimeElement.innerHTML = `Reaction Time: <span>${data.reactionTime !== undefined ? data.reactionTime : 'N/A'}</span> seconds`;
                elapsedTimeElement.innerHTML = `Elapsed Time: <span>${data.elapsedTime !== undefined ? data.elapsedTime : 'N/A'}</span> seconds`;
+
+               if (['FINISHED'].includes(data.raceState)) {
+                    trapSpeedElement.classList.remove('hidden');
+                    trapSpeedElement.innerHTML = `Trap Speed: <span>${data.trapSpeed !== undefined ? data.trapSpeed : 'N/A'}</span> mph`;
+               }
            } else {
                reactionTimeElement.classList.add('hidden');
                elapsedTimeElement.classList.add('hidden');
+               trapSpeedElement.classList.add('hidden');
            }
 
            updateRaceTree(data.raceState);
@@ -374,6 +381,7 @@ function updateRaceTree(state) {
 
        case 'FINISHED':
            document.querySelectorAll('.prestage, .stage, .yellow').forEach(light => light.classList.add('active'));
+           document.querySelectorAll('.yellow').forEach(light => light.classList.add('flashing'));
            document.getElementById('green1').classList.add('active', 'flashing');
            document.getElementById('green2').classList.add('active', 'flashing');
            break;

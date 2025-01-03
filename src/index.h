@@ -75,6 +75,10 @@ const char* htmlPage = R"rawliteral(
             background-color: #121212;
             color: #ffffff;
         }
+        /* Specific styles for race feature in dark mode */
+        .dark-mode #race {
+            background-color: #1e1e1e; /* Darker background for race feature */
+        }
         .toggle-switch {
             position: relative;
             display: inline-block;

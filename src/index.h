@@ -424,29 +424,37 @@ function updateRaceDistance() {
    const raceType = document.getElementById("raceType").value;
    const customDistanceInput = document.getElementById("customDistance");
 
+   let distance;
+
    if (raceType === "custom") {
        customDistanceInput.style.display = "inline-block";
+       distance = parseFloat(customDistanceInput.value);
+       if (isNaN(distance) || distance <= 0) {
+           console.error("Invalid custom distance");
+           return; // Exit the function if the custom distance is invalid
+       }
    } else {
        customDistanceInput.style.display = "none";
-       const distance = raceType === "eighth" ? 132 : 264; // Feet
-       
-       fetch("/updateRaceDistance", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ distance }),
-       })
-       .then(response => {
-           if (!response.ok) {
-               throw new Error('Network response was not ok');
-           }
-           return response.json();
-       })
-       .then(data => console.log("Race distance updated:", data))
-       .catch(error => console.error("Error updating race distance:", error));
+       distance = raceType === "eighth" ? 132 : 264; // Feet
    }
+   
+   fetch("/updateRaceDistance", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ distance }),
+   })
+   .then(response => {
+       if (!response.ok) {
+           throw new Error('Network response was not ok');
+       }
+       return response.json();
+   })
+   .then(data => console.log("Race distance updated:", data))
+   .catch(error => console.error("Error updating race distance:", error));
 }
+
 
 function clearMaxSpeed() {
         fetch('/clearMaxSpeed')
@@ -603,7 +611,7 @@ function clearMaxSpeed() {
         </select>
 
         <!-- Custom Distance Input -->
-        <input type='number' id='customDistance' style='display:none;' placeholder='Enter distance in feet'>
+        <input type='number' id='customDistance' style='display:none;' placeholder='Enter distance in feet' onchange='updateRaceDistance()'>
 
         <!-- Control Buttons -->
         <br/>

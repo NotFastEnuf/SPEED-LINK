@@ -7,7 +7,7 @@ float lastSpeed = 0;
 float trapSpeed = 0;
 float elapsedTime = 0;
 float reactionTime = 0;
-float raceDistance = 20; // Set this based on race type
+float raceDistance = 132; // Set this based on race type
 unsigned long greenLightTime = 0;
 unsigned long yellowStartTime = 0;
 unsigned long vehicleStartTime = 0;
@@ -29,10 +29,6 @@ enum RaceState {
     FINISHED 
 };
 RaceState currentRaceState = INACTIVE;
-
-
-
-
 
 
 
@@ -174,7 +170,6 @@ void handleStartRace() {
   raceRequested = true;
   currentRaceState = PRE_STAGE;
   resetRaceGlobals();
-  // TODO: Set race distance here in meters
   
   // Create a JSON response with more information
   DynamicJsonDocument doc(256);
@@ -188,7 +183,6 @@ void handleStartRace() {
 }
 
 
-
 void handleCancelRace() {
   raceRequested = false;
   currentRaceState = INACTIVE;
@@ -197,14 +191,11 @@ void handleCancelRace() {
 }
 
 
-
 void handleUpdateRaceDistance() {
     if (server.hasArg("plain")) {
         String body = server.arg("plain");
-        
         DynamicJsonDocument doc(1024);
         DeserializationError error = deserializeJson(doc, body);
-        
         if (error) {
             server.send(400, "application/json", "{\"error\":\"Invalid JSON\"}");
             return;
@@ -214,10 +205,8 @@ void handleUpdateRaceDistance() {
             server.send(400, "application/json", "{\"error\":\"Missing distance parameter\"}");
             return;
         }
-        
         int distance = doc["distance"];
         raceDistance = distance;
-        
         server.send(200, "application/json", "{\"message\":\"Race distance updated\",\"distance\":" + String(distance) + "}");
     } else {
         server.send(400, "application/json", "{\"error\":\"Invalid request\"}");
@@ -243,9 +232,9 @@ String getRaceStateName(RaceState state) {
     }
 }
 
+
 void handleRaceDisplay() {
     DynamicJsonDocument doc(1024);
-    
     if (gps.location.isValid()) {
         doc["raceState"] = getRaceStateName(currentRaceState);
         doc["raceDistance"] = raceDistance;
@@ -253,38 +242,9 @@ void handleRaceDisplay() {
         doc["reactionTime"] = reactionTime;
         doc["elapsedTime"] = elapsedTime;
         doc["trapSpeed"] = trapSpeed; 
-        /*
-        
-        switch(currentRaceState) {
-            case INACTIVE:
-                break;
-            case PRE_STAGE:
-            case STAGE:
-                // No additional data needed
-                break;
-            case RED_LIGHT:
-                doc["reactionTime"] = reactionTime;
-                doc["elapsedTime"] = elapsedTime;
-                break;
-            case YELLOW1:
-            case YELLOW2:
-            case YELLOW3:
-            case GREEN_LIGHT:
-            case VEHICLE_START:
-                doc["reactionTime"] = reactionTime;
-                doc["elapsedTime"] = elapsedTime;
-            case RACING:
-                doc["reactionTime"] = reactionTime;
-                doc["elapsedTime"] = elapsedTime;
-            case FINISHED:
-                 doc["reactionTime"] = reactionTime;
-                 doc["elapsedTime"] = elapsedTime;
-                 doc["trapSpeed"] = trapSpeed;  
-        }*/
     } else {
         doc["error"] = "GPS signal not valid";
     }
-
     String response;
     serializeJson(doc, response);
     server.send(200, "application/json", response);

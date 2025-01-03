@@ -61,7 +61,7 @@ void handleRaceLogic() {
 
     case PRE_STAGE:   //Advance to the starting line
       if (gps.location.isValid()) {
-        if (TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) < 1.0) {
+        if (TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) < 1.5) {
           //just stay in this state with pre-stage light lit wiiting for the driver to advance 
         } else {  //assume the driver has advanced to the starting line and trigger stage lights
            currentRaceState = STAGE;

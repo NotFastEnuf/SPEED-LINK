@@ -293,18 +293,18 @@ function updateRaceData() {
            if (data.raceState === 'FINISHED') {
                currentSpeedElement.classList.add('hidden');
                trapSpeedElement.classList.remove('hidden');
-               trapSpeedElement.innerHTML = `Trap Speed: <span>${data.trapSpeed !== undefined ? data.trapSpeed : 'N/A'}</span> mph`;
+               trapSpeedElement.innerHTML = `Trap Speed: <span>${data.trapSpeed ? parseFloat(data.trapSpeed).toFixed(2) : 'N/A'}</span> mph`;
            } else {
                currentSpeedElement.classList.remove('hidden');
-               currentSpeedElement.innerHTML = `Current Speed: <span>${data.currentSpeed || 'N/A'}</span> mph`;
+               currentSpeedElement.innerHTML = `Current Speed: <span>${data.currentSpeed ? parseFloat(data.currentSpeed).toFixed(2) : 'N/A'}</span> mph`;
                trapSpeedElement.classList.add('hidden');
            }
 
            if (['RACING', 'FINISHED', 'RED_LIGHT'].includes(data.raceState)) {
                reactionTimeElement.classList.remove('hidden');
                elapsedTimeElement.classList.remove('hidden');
-               reactionTimeElement.innerHTML = `Reaction Time: <span>${data.reactionTime !== undefined ? data.reactionTime : 'N/A'}</span> seconds`;
-               elapsedTimeElement.innerHTML = `Elapsed Time: <span>${data.elapsedTime !== undefined ? data.elapsedTime : 'N/A'}</span> seconds`;
+               reactionTimeElement.innerHTML = `Reaction Time: <span>${data.reactionTime ? parseFloat(data.reactionTime).toFixed(3) : 'N/A'}</span> seconds`;
+               elapsedTimeElement.innerHTML = `Elapsed Time: <span>${data.elapsedTime ? parseFloat(data.elapsedTime).toFixed(3) : 'N/A'}</span> seconds`;
            } else {
                reactionTimeElement.classList.add('hidden');
                elapsedTimeElement.classList.add('hidden');
@@ -314,6 +314,7 @@ function updateRaceData() {
        })
        .catch(error => console.error('Error fetching race data:', error));
 }
+
 
 
 

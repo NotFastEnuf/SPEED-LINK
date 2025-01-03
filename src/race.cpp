@@ -132,7 +132,7 @@ void handleRaceLogic() {
         float distanceTraveled = TinyGPSPlus::distanceBetween(
           lastLat, lastLon, gps.location.lat(), gps.location.lng());
         
-        if (distanceTraveled >= raceDistance) {
+        if (distanceTraveled >= (raceDistance * 0.3048)) {
           currentRaceState = FINISHED;
         } else {
           lastLat = gps.location.lat();
@@ -147,7 +147,7 @@ void handleRaceLogic() {
 
     case FINISHED:
       // Interpolate for more accurate ET and Trap Speed
-      float overshoot = TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) - raceDistance;
+      float overshoot = TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng()) - (raceDistance * 0.3048);
       float totalDistance = TinyGPSPlus::distanceBetween(lastLat, lastLon, gps.location.lat(), gps.location.lng());
       float interpolationFactor = 1 - (overshoot / totalDistance);
       

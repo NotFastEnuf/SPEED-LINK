@@ -37,6 +37,7 @@ void handleRaceLogic() {
   if (!raceRequested) return;
 
   switch(currentRaceState) {
+
     case INACTIVE:
       // No Activity
       break;
@@ -120,8 +121,28 @@ void handleRaceLogic() {
     
     case RED_LIGHT:
       // Handle red light condition (false start)
-      reactionTime = (millis() - greenLightTime) / 1000.0;
-      currentRaceState = VEHICLE_START;
+      static bool firstPass = true;
+      if (firstPass) {
+          reactionTime = (millis() - (yellowStartTime + 1500.0)) / 1000.0;
+          vehicleStartTime = millis();
+          lastLat = gps.location.lat();
+          lastLon = gps.location.lng();
+          firstPass = false;
+      } else {
+        if (gps.location.isValid() && gps.speed.isValid()) {
+          float distanceTraveled = TinyGPSPlus::distanceBetween(
+            lastLat, lastLon, gps.location.lat(), gps.location.lng());
+        
+          if (distanceTraveled >= (raceDistance * 0.3048)) {
+            currentRaceState = FINISHED;
+            firstPass = true;
+          } else {
+            lastSpeed = gps.speed.mph();
+            unsigned long timeNow = millis();
+            elapsedTime = (timeNow - vehicleStartTime)/1000;
+          }
+        }
+      }
       break;
 
     case GREEN_LIGHT:
@@ -151,7 +172,6 @@ void handleRaceLogic() {
           elapsedTime = (timeNow - vehicleStartTime)/1000;
         }
       }
-      //update elapsed time here
       break;
 
     case FINISHED:

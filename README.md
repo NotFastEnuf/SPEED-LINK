@@ -11,6 +11,7 @@ SPEED-LINK Dashboard is a GPS-based tracking system for radio controlled vehicle
 - Dark mode for better visibility in low-light conditions
 - Unit toggle between metric and imperial systems
 - Three main views: Dashboard, Race, and GPS Data
+- Drag Racing Game - Race against simulated drag racing staging lights.  Check your Reaction Time, your vehicle's Elapsed Time, and Trap Speed.  Don't leave before GREEN  or receive a RED LIGHT VIOLATION!
 
 ## Hardware Requirements
 
@@ -72,9 +73,8 @@ Special thanks to the rc, open source, and maker communities as well as the libr
 
 ## Under Development
 
-- race tab ...stage up scale 1/4 or 1/8 mile races.  include large easy to see staging lights.  race head to head using bluetooth.  report ET, trap speed, reaction time, false start
-- units switch ...not supported yet
-- altitude feature for jump height feature is only operating on raw gps data and needs further development.  Raw gps altitude can not hold a stable floor(slowly floats up and down) but very nicely will pick up jump.
+- race tab ...  race head to head with another SPEED_LINK system using bluetooth to communicate race state and data between modules.  
+- altitude feature for jump/climb height feature is only operating on raw gps data and needs further development.  Raw gps altitude can not hold a stable floor(slowly floats up and down) but very nicely will pick up jump against the "moving floor".
 - report trip distance in feet / meters to better evaluate inaccuracy
 - explore using the gps module tx pin to put the gps in 10hz mode for more accurate readings
-- explore some sort of interaction between the rc controller and the SPEED-LINK system by listening to an aux channel on vehicle receiver
+- explore some sort of interaction between the rc controller and the SPEED-LINK system by listening to an aux channel on vehicle receiver - ie - reset/request new race from rc transmitter

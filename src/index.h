@@ -210,16 +210,19 @@ function showPage(pageId) {
     document.getElementById(pageId).classList.add('active');
 }
 
+
 function toggleSettings() {
     var settingsOverlay = document.getElementById('settingsOverlay');
     settingsOverlay.style.display = 
         settingsOverlay.style.display === 'block' ? 'none' : 'block';
 }
 
+
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
 }
+
 
 function toggleUnits() {
     var unitsLabel = document.getElementById('unitsLabel');
@@ -230,7 +233,22 @@ function toggleUnits() {
         unitsLabel.textContent = 'Metric';
         localStorage.setItem('units', 'metric');
     }
+    updateData(); // Refresh the data with new units
+    updateRaceDistance(); // Update race distance display and input placeholder
 }
+
+function mphToKmh(mph) {
+    return (mph * 1.60934).toFixed(2);
+}
+
+function feetToMeters(feet) {
+    return (feet * 0.3048).toFixed(2);
+}
+
+function milesToKm(miles) {
+    return (miles * 1.60934).toFixed(2);
+}
+
 
 function updateData() {
     var activePage = document.querySelector('.page.active');
@@ -245,35 +263,54 @@ function updateData() {
    }
 }
 
+
 function updateDashboardData() {
-        fetch('/dashboarddata')
-            .then(response => response.text())
-            .then(data => {
-                const lines = data.split('<br>');
-                document.getElementById('speed').textContent = lines[0];
-                document.getElementById('maxSpeed').textContent = lines[1];
-                document.getElementById('odometer').textContent = lines[2];
-                document.getElementById('trip').textContent = lines[3];
-                document.getElementById('altitude').textContent = lines[4];
-                document.getElementById('maxAltitudeChange').textContent = lines[5];
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
+    fetch('/dashboarddata')
+        .then(response => response.text())
+        .then(data => {
+            const lines = data.split('<br>');
+            const isMetric = document.getElementById('unitsLabel').textContent === 'Metric';
+            
+            const speed = parseFloat(lines[0].split(':')[1]);
+            const maxSpeed = parseFloat(lines[1].split(':')[1]);
+            const odometer = parseFloat(lines[2].split(':')[1]);
+            const trip = parseFloat(lines[3].split(':')[1]);
+            const altitude = parseFloat(lines[4].split(':')[1]);
+            const maxAltitudeChange = parseFloat(lines[5].split(':')[1]);
+
+            document.getElementById('speed').innerHTML = `Current Speed: <span>${isMetric ? mphToKmh(speed) + ' km/h' : speed + ' mph'}</span>`;
+            document.getElementById('maxSpeed').innerHTML = `Max Speed: <span>${isMetric ? mphToKmh(maxSpeed) + ' km/h' : maxSpeed + ' mph'}</span>`;
+            document.getElementById('odometer').innerHTML = `Odometer: <span>${isMetric ? milesToKm(odometer) + ' km' : odometer + ' miles'}</span>`;
+            document.getElementById('trip').innerHTML = `Trip: <span>${isMetric ? milesToKm(trip) + ' km' : trip + ' miles'}</span>`;
+            document.getElementById('altitude').innerHTML = `Altitude: <span>${isMetric ? feetToMeters(altitude) + ' m' : altitude + ' ft'}</span>`;
+            document.getElementById('maxAltitudeChange').innerHTML = `Max Altitude Change: <span>${isMetric ? feetToMeters(maxAltitudeChange) + ' m' : maxAltitudeChange + ' ft'}</span>`;
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
+
 
 function updateGPSData() {
     fetch('/gpsdata')
         .then(response => response.text())
         .then(data => {
             const lines = data.split('<br>');
+            const isMetric = document.getElementById('unitsLabel').textContent === 'Metric';
+            
             document.getElementById('gpsLatitude').textContent = lines[0];
             document.getElementById('gpsLongitude').textContent = lines[1];
             document.getElementById('gpsTime').textContent = lines[2];
             document.getElementById('gpsDate').textContent = lines[3];
-            document.getElementById('gpsSpeed').textContent = lines[4];
+            
+            const speed = parseFloat(lines[4].split(':')[1]);
+            document.getElementById('gpsSpeed').innerHTML = `Current Speed: <span>${isMetric ? mphToKmh(speed) + ' km/h' : speed + ' mph'}</span>`;
+            
             document.getElementById('gpsCourse').textContent = lines[5];
-            document.getElementById('gpsAltitude').textContent = lines[6];
+            
+            const altitude = parseFloat(lines[6].split(':')[1]);
+            document.getElementById('gpsAltitude').innerHTML = `Altitude: <span>${isMetric ? feetToMeters(altitude) + ' m' : altitude + ' ft'}</span>`;
+            
             document.getElementById('gpsSatellites').textContent = lines[7];
             document.getElementById('gpsHdop').textContent = lines[8];
         })
@@ -282,12 +319,14 @@ function updateGPSData() {
     });
 }
 
+
 function updateRaceData() {
    fetch('/racedata')
        .then(response => response.json())
        .then(data => {
+           const isMetric = document.getElementById('unitsLabel').textContent === 'Metric';
            document.getElementById('raceState').innerHTML = `Race State: <span>${data.raceState || 'N/A'}</span>`;
-           document.getElementById('raceDistance').innerHTML = `Race Distance: <span>${data.raceDistance || 'N/A'}</span> feet`;
+           document.getElementById('raceDistance').innerHTML = `Race Distance: <span>${isMetric ? feetToMeters(data.raceDistance) + ' m' : data.raceDistance + ' feet'}</span>`;
 
            const currentSpeedElement = document.getElementById('currentSpeed');
            const reactionTimeElement = document.getElementById('reactionTime');
@@ -297,10 +336,12 @@ function updateRaceData() {
            if (data.raceState === 'FINISHED') {
                currentSpeedElement.classList.add('hidden');
                trapSpeedElement.classList.remove('hidden');
-               trapSpeedElement.innerHTML = `Trap Speed: <span>${data.trapSpeed ? parseFloat(data.trapSpeed).toFixed(2) : 'N/A'}</span> mph`;
+               const trapSpeed = data.trapSpeed ? parseFloat(data.trapSpeed).toFixed(2) : 'N/A';
+               trapSpeedElement.innerHTML = `Trap Speed: <span>${isMetric ? mphToKmh(trapSpeed) + ' km/h' : trapSpeed + ' mph'}</span>`;
            } else {
                currentSpeedElement.classList.remove('hidden');
-               currentSpeedElement.innerHTML = `Current Speed: <span>${data.currentSpeed ? parseFloat(data.currentSpeed).toFixed(2) : 'N/A'}</span> mph`;
+               const currentSpeed = data.currentSpeed ? parseFloat(data.currentSpeed).toFixed(2) : 'N/A';
+               currentSpeedElement.innerHTML = `Current Speed: <span>${isMetric ? mphToKmh(currentSpeed) + ' km/h' : currentSpeed + ' mph'}</span>`;
                trapSpeedElement.classList.add('hidden');
            }
 
@@ -318,10 +359,6 @@ function updateRaceData() {
        })
        .catch(error => console.error('Error fetching race data:', error));
 }
-
-
-
-
 
 function updateRaceTree(state) {
    const allLights = document.querySelectorAll('.light, .half-light, .prestage, .stage, .yellow, .green');
@@ -416,7 +453,6 @@ function startRace() {
        .catch(error => console.error("Error starting race:", error));
 }
 
-
 function clearRace() {
    fetch('/clearRace', { method:'POST' })
        .then(response => response.json())
@@ -427,19 +463,24 @@ function clearRace() {
        .catch(error => console.error("Error clearing race:", error));
 }
 
-
 function updateRaceDistance() {
    const raceType = document.getElementById("raceType").value;
    const customDistanceInput = document.getElementById("customDistance");
+   const isMetric = document.getElementById('unitsLabel').textContent === 'Metric';
 
    let distance;
 
    if (raceType === "custom") {
        customDistanceInput.style.display = "inline-block";
+       customDistanceInput.placeholder = isMetric ? "Enter distance in meters" : "Enter distance in feet";
        distance = parseFloat(customDistanceInput.value);
        if (isNaN(distance) || distance <= 0) {
            console.error("Invalid custom distance");
            return; // Exit the function if the custom distance is invalid
+       }
+       // Convert meters to feet if in metric mode
+       if (isMetric) {
+           distance = distance / 0.3048; // Convert meters to feet
        }
    } else {
        customDistanceInput.style.display = "none";
@@ -459,7 +500,12 @@ function updateRaceDistance() {
        }
        return response.json();
    })
-   .then(data => console.log("Race distance updated:", data))
+   .then(data => {
+       console.log("Race distance updated:", data);
+       // Update the displayed race distance
+       const displayDistance = isMetric ? feetToMeters(distance) + ' m' : distance + ' feet';
+       document.getElementById('raceDistance').innerHTML = `Race Distance: <span>${displayDistance}</span>`;
+   })
    .catch(error => console.error("Error updating race distance:", error));
 }
 
@@ -468,7 +514,7 @@ function clearMaxSpeed() {
         fetch('/clearMaxSpeed')
             .then(() => updateData())
             .catch(error => console.error('Error clearing max speed:', error));
-    }
+}
 
     function clearTrip() {
         fetch('/clearTrip')

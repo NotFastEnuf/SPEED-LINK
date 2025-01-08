@@ -4,9 +4,13 @@
 
 const char* htmlPage = R"rawliteral(
 
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPEED-LINK Dash</title>
     <style>
         body { 
@@ -19,29 +23,56 @@ const char* htmlPage = R"rawliteral(
             flex-direction: column;
             min-height: 100vh;
         }
-        h1 { font-size: 3em; margin-top: 20px; }
+        header {
+            background-color: #036eb4;
+            color: white;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+        h1 { font-size: 3em; margin-top: 10px;  margin-bottom: 10px; }
         h2 { font-size: 2em; }
+        main {
+            flex: 1;
+            padding: 0 1rem 1rem 1rem;
+            max-width: 600px;
+            margin: 0 auto 62px auto;
+            background-color: #f0f0f0;
+            border-radius: 20px;
+        }
+        .dark-mode main {
+            background-color: #1e1e1e; /* Darker background for main container */
+        }
         .page { 
             display: none;
             flex: 1;
+            flex-direction: column;
             overflow-y: auto;
-            padding-bottom: 60px;
         }
         .active { display: block; }
-        .nav-buttons {
-            display: flex;
-            justify-content: space-around;
-            background-color: #f0f0f0;
-            padding: 10px 0;
+        nav {
+            background-color: #34495e;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
+            height: 62px; /* Adjust this value based on your button height */
+            display: flex;
+            justify-content: space-around;
         }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            background-color: #f0f0f0;
+        }
+
         .nav-buttons button {
             margin: 0;
             padding: 10px 20px;
-            font-size: 36px;
+            font-size: 16px;
+            font-weight: bold;
             flex: 1;
         }
         .settings-menu {
@@ -74,10 +105,6 @@ const char* htmlPage = R"rawliteral(
         .dark-mode {
             background-color: #121212;
             color: #ffffff;
-        }
-        /* Specific styles for race feature in dark mode */
-        .dark-mode #race {
-            background-color: #1e1e1e; /* Darker background for race feature */
         }
         .toggle-switch {
             position: relative;
@@ -141,13 +168,6 @@ const char* htmlPage = R"rawliteral(
        }
 
         /* New styles for the race tab */
-        #race {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-radius: 10px;
-        }
         .light {
             width: 50px;
             height: 50px;
@@ -173,7 +193,7 @@ const char* htmlPage = R"rawliteral(
         .light.active.green { background-color: lime; }
         .light.active.red { background-color: red; }
         #raceTree {
-            margin: 20px 0;
+            margin: 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -543,12 +563,15 @@ function clearMaxSpeed() {
 
 </head>
 <body>
-    <h1><i>SPEED-LINK</i></h1>
-
-    <div class="settings-menu" onclick="toggleSettings()">
+    <header>
+        <h1><i>SPEED-LINK</i></h1>
+    
+        <div class="settings-menu" onclick="toggleSettings()">
         &#8942;
-    </div>
+        </div>
+    </header>
 
+    <main>
     <div id="settingsOverlay" class="settings-overlay" onclick="toggleSettings()">
         <div class="settings-content" onclick="event.stopPropagation()">
           <h2>Settings</h2>
@@ -598,13 +621,6 @@ function clearMaxSpeed() {
         <p id="gpsAltitude">Altitude: <span>Loading...</span></p>
         <p id="gpsSatellites">Satellites: <span>Loading...</span></p>
         <p id="gpsHdop">HDOP: <span>Loading...</span></p>
-    </div>
-
-
-    <div class="nav-buttons">
-        <button onclick="showPage('dashboard')">DASHBOARD</button>
-        <button onclick="showPage('race')">RACE</button>
-        <button onclick="showPage('gps')">GPS</button>
     </div>
 
     <div id="race" class="page">
@@ -673,11 +689,18 @@ function clearMaxSpeed() {
         <button onclick='clearRace()'>Clear Race</button>
 
     </div>
+    </main>
+
+    <nav>
+        <div class="nav-buttons">
+            <button onclick="showPage('dashboard')">DASHBOARD</button>
+            <button onclick="showPage('race')">RACE</button>
+            <button onclick="showPage('gps')">GPS</button>
+        </div>
+
+    </nav>
 </body>
 </html>
-
-
-
 
 )rawliteral";
 

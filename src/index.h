@@ -380,10 +380,10 @@ const char* htmlPage = R"rawliteral(
                     racerInstructionsElement.innerHTML = '<span>PRESS START TO RACE!</span>';
                     break;
                 case 'RACE_REQUESTED':
-                    racerInstructionsElement.innerHTML = '<span>REMAIN STILL IN THE STAGING AREA</span>';
+                    racerInstructionsElement.innerHTML = '<span>WAIT IN THE STAGING AREA</span>';
                     break;
                 case 'PRE_STAGE':
-                    racerInstructionsElement.innerHTML = '<span>MOVE FORWARD TO THE STARTING LINE</span>';
+                    racerInstructionsElement.innerHTML = '<span>MOVE TO THE STARTING LINE</span>';
                     break;
                 case 'STAGE':
                     racerInstructionsElement.innerHTML = '<span>RACE IS STAGED</span>';
@@ -406,7 +406,7 @@ const char* htmlPage = R"rawliteral(
                     racerInstructionsElement.innerHTML = '<span>GO! GO! GO!</span>';
                     break;
                 case 'FINISHED':
-                    racerInstructionsElement.innerHTML = '<span>RACE COMPLETE - CHECK YOUR STATS!</span>';
+                    racerInstructionsElement.innerHTML = '<span>RACE COMPLETE! CHECK YOUR STATS!</span>';
                     break;
                 default:
                     racerInstructionsElement.innerHTML = '<span>LOADING...</span>';

@@ -7,6 +7,8 @@
 #include <ESP8266WebServer.h>
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
+#include <WebSocketsServer.h>
+
 
 extern ESP8266WebServer server;
 extern TinyGPSPlus gps;

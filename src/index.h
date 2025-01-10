@@ -613,7 +613,8 @@ const char* htmlPage = R"rawliteral(
                 .then(() => updateData())
                 .catch(error => console.error('Error clearing max altitude change:', error));
         }
-
+        var socket;
+        var dataStore = {};
         window.onload = function() {
             if (localStorage.getItem('darkMode') === 'true') {
                 document.body.classList.add('dark-mode');
@@ -623,7 +624,32 @@ const char* htmlPage = R"rawliteral(
                 document.getElementById('unitsLabel').textContent = 'Imperial'; 
                 document.getElementById('unitsToggle').checked = true; 
             } 
+
             setInterval(updateData, 100);
+
+            // Initialize WebSocket connection
+            socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+            
+            // Set up WebSocket event handlers
+            socket.onopen = function(event) {
+                console.log('WebSocket connection established');
+            };
+
+            socket.onmessage = function(event) {
+                dataStore = JSON.parse(event.data);
+                //updateUIWithData();
+                //attempt to log websocket data to console
+                console.log('Received data:');
+                console.log(JSON.stringify(dataStore, null, 2));
+            };
+
+            socket.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+
+            socket.onclose = function(event) {
+                console.log('WebSocket connection closed');
+            };
         }
     </script>
 

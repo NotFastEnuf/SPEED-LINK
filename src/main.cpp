@@ -6,10 +6,12 @@
 #include <gps.h>
 #include <race.h>
 #include <tracking.h>
+#include <mywebsockets.h>
 
 const char *ssid = "RC_GPS_Tracker";
 const char *password = "password123";
 
+WebSocketsServer webSocket = WebSocketsServer(81);
 ESP8266WebServer server(80);
 SoftwareSerial gpsSerial(D4, D1); // RX, TX
 TinyGPSPlus gps;
@@ -36,6 +38,10 @@ void setup() {
     server.on("/startRace", HTTP_POST, handleStartRace);
     server.on("/clearRace", HTTP_POST, handleCancelRace);
     server.on("/updateRaceDistance", HTTP_POST, handleUpdateRaceDistance);
+
+    webSocket.begin();
+    webSocket.onEvent(webSocketEvent);
+
     server.begin();
     Serial.println("HTTP server started.");
 }
@@ -53,7 +59,8 @@ void loop() {
     }
     // Race
     handleRaceLogic();
-
+    updateClientData();
+    webSocket.loop();
     server.handleClient();
     yield();
 }

@@ -9,9 +9,9 @@
     
     <!-- ESP Web Flasher tool by Spacehuhn (https://github.com/SpacehuhnTech/espwebtool) -->
     <script type="module">
+        // Preload the esptoolPackage module
         window.esptoolPackage = import("https://unpkg.com/esp-web-flasher@5.1.4/dist/web/index.js?module");
     </script>
-    
     
     <style>
         body {
@@ -44,10 +44,11 @@
     </div>
 
     <script type="module">
-        import { ESPLoader } from 'https://unpkg.com/esp-web-flasher@5.1.4/dist/web/index.js?module';
+        import { ESPWebFlasher } from 'https://unpkg.com/esp-web-flasher@5.1.4/dist/web/index.js?module';
         
         try {
-            const espTool = new ESPLoader();
+            const rootElement = document.getElementById('root');
+            const webFlasher = new ESPWebFlasher(rootElement);
             console.log('ESP Web Flasher tool loaded successfully');
         } catch (error) {
             console.error('Failed to load ESP Web Flasher tool:', error);

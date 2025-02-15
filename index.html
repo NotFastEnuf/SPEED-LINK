@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="Flash your ESP32 or ESP8266 through your browser. Open-Source, free, and easy to use."/>
+    <meta name="keywords" content="Web Serial, ESPtool, Flasher, Spacehuhn, ESP8266, ESP32, ESP32-S2, ESP32-S3, ESP32-C3"/>
+    <title>ESP Web Flasher Integration Test</title>
+    
+    <!-- ESP Web Flasher tool by Spacehuhn (https://github.com/SpacehuhnTech/espwebtool) -->
+    <script type="module">
+        window.esptoolPackage = import("https://unpkg.com/esp-web-flasher@5.1.4/dist/web/index.js?module");
+    </script>
+    
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ESP Web Flasher Integration Test</h1>
+        <p>This page demonstrates the integration of the ESP Web Flasher tool.</p>
+        <div id="root">
+            <!-- The ESP Web Flasher tool will be mounted here -->
+        </div>
+    </div>
+
+    <script>
+        // This script will initialize the ESP Web Flasher tool
+        window.esptoolPackage.then(module => {
+            const espTool = new module.ESPLoader();
+            console.log('ESP Web Flasher tool loaded successfully');
+            // You can add your custom initialization or UI elements here
+        }).catch(error => {
+            console.error('Failed to load ESP Web Flasher tool:', error);
+        });
+    </script>
+</body>
+</html>

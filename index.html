@@ -43,15 +43,15 @@
         </div>
     </div>
 
-    <script>
-        // This script will initialize the ESP Web Flasher tool
-        window.esptoolPackage.then(module => {
-            const espTool = new module.ESPLoader();
+    <script type="module">
+        import { ESPLoader } from 'https://unpkg.com/esp-web-flasher@5.1.4/dist/web/index.js?module';
+        
+        try {
+            const espTool = new ESPLoader();
             console.log('ESP Web Flasher tool loaded successfully');
-            // You can add your custom initialization or UI elements here
-        }).catch(error => {
+        } catch (error) {
             console.error('Failed to load ESP Web Flasher tool:', error);
-        });
+        }
     </script>
 </body>
 </html>

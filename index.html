@@ -678,11 +678,14 @@
 
 
         const iframe = document.querySelector('.container iframe');
+        const communityBox = document.querySelector('.container .community-box');
 
         window.addEventListener('message', event => {
-        if (event.source === iframe.contentWindow && event.data.height) {
-            iframe.style.height = event.data.height + 'px';
-        }
+            if (event.source === iframe.contentWindow && event.data.height) {
+                const newHeight = event.data.height + 'px';
+                iframe.style.height = newHeight;
+                communityBox.style.height = newHeight;
+            }
         });
     </script>
 </body>

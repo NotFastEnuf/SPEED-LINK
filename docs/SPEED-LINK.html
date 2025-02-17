@@ -289,5 +289,15 @@
 
         <a href="https://notfastenuf.github.io/">Back to Makerspace Hub</a>
     </div>
+    <script>
+        // Trigger on load and on resize
+        const updateHeight = () => {
+          const contentHeight = document.body.scrollHeight;
+          window.parent.postMessage({ height: contentHeight }, '*');
+        };
+      
+        window.addEventListener('load', updateHeight);
+        window.addEventListener('resize', updateHeight);
+      </script>
 </body>
 </html>

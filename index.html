@@ -675,6 +675,15 @@
             }
         };
 
+
+
+        const iframe = document.querySelector('.container iframe');
+
+        window.addEventListener('message', event => {
+        if (event.source === iframe.contentWindow && event.data.height) {
+            iframe.style.height = event.data.height + 'px';
+        }
+        });
     </script>
 </body>
 

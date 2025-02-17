@@ -297,7 +297,7 @@
 
         // Post message with a small delay
         setTimeout(() => {
-            window.parent.postMessage(message, '*'); // Replace '*' with the specific origin if needed
+            window.parent.postMessage(message, 'https://notfastenuf.github.io'); // Replace '*' with the specific origin if needed
             console.log('Message posted:', message);
         }, 500); // Adjust delay if needed
         })();

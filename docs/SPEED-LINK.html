@@ -290,17 +290,21 @@
         <a href="https://notfastenuf.github.io/">Back to Makerspace Hub</a>
     </div>
     <script>
-        // Trigger on load and on resize
-        (() => {
-        const contentHeight = document.body.scrollHeight;
-        const message = { height: contentHeight };
+// Trigger on load and on resize
+(() => {
+  const sendMessage = () => {
+    const contentHeight = document.body.scrollHeight;
+    const message = { height: contentHeight };
+    window.parent.postMessage(message, 'https://notfastenuf.github.io/SPEED-LINK'); // Removed trailing slash
+    console.log('Message posted:', message);
+  };
 
-        // Post message with a small delay
-        setTimeout(() => {
-            window.parent.postMessage(message, 'https://notfastenuf.github.io/SPEED-LINK/'); // Replace '*' with the specific origin if needed
-            console.log('Message posted:', message);
-        }, 500); // Adjust delay if needed
-        })();
+  // Send message initially
+  sendMessage();
+
+  // Send message every 500ms
+  setInterval(sendMessage, 500);
+})();
       </script>
 </body>
 </html>

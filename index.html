@@ -681,7 +681,7 @@
             console.log('Event Origin:', event.origin); // Log the origin to see what the browser is sending
 
             // Check the origin EXACTLY (case-sensitive, including trailing slash)
-            if (event.origin === 'https://notfastenuf.github.io') { // Exactly match!
+            if (event.origin === 'https://notfastenuf.github.io/SPEED-LINK/') { // Exactly match!
                 console.log("Origin Matched!");
                 // Now, process the message
                 if (typeof event.data === 'object' && event.data.height) { // Check if it's the expected message format

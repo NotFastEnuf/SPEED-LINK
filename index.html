@@ -677,17 +677,17 @@
 
 
 
-        const iframe = document.querySelector('.container iframe');
-        const communityBox = document.querySelector('.container .community-box');
-
-        window.addEventListener('message', event => {
-            //if (event.source === iframe.contentWindow && event.data.height) {
-                console.log('Received message:', event.data);
-                const newHeight = event.data.height + 'px';
-                iframe.style.height = newHeight;
-                communityBox.style.height = newHeight;
-            //}
-        });
+        function waitForIframeAndAttachListener() {
+        const iframe = document.querySelector('#project-highlights-container iframe');
+        const communityBox = document.querySelector('.community-box');
+        if (iframe && communityBox) {
+            window.addEventListener('message', event => {
+            console.log('Received message:', event.data);
+            });
+        } else {
+            setTimeout(waitForIframeAndAttachListener, 100); // Check again after 100ms
+        }
+        }
     </script>
 </body>
 

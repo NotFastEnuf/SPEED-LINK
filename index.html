@@ -635,19 +635,19 @@
             featureSections.forEach((featureSection, index) => {
                 const contentOverlay = contentOverlays[index];
                 if (contentOverlay && isContentOverlayCentered(featureSection, contentOverlay)) {
-                    console.log(`content-overlay ${index + 1} is centered in feature-section`);
+                    //console.log(`content-overlay ${index + 1} is centered in feature-section`);
                     // Add your actions here when centered
                     featureSection.classList.add('centered');
                 } else {
-                    console.log(`content-overlay ${index + 1} is not centered`);
+                    //console.log(`content-overlay ${index + 1} is not centered`);
                     // Add your actions here when not centered
                 }
                 if (contentOverlay && isContentOverlayReleased(featureSection, fixedHeader)) {
-                    console.log(`content-overlay ${index + 1} is released from feature-section`);
+                    //console.log(`content-overlay ${index + 1} is released from feature-section`);
                     // Add your actions here when released
                     featureSection.classList.remove('centered')
                 } else {
-                    console.log(`content-overlay ${index + 1} is LOCKED`);
+                    //console.log(`content-overlay ${index + 1} is LOCKED`);
                     // Add your actions here when locked
                 }
             });
@@ -682,6 +682,7 @@
 
         window.addEventListener('message', event => {
             if (event.source === iframe.contentWindow && event.data.height) {
+                console.log('Received message:', event.data);
                 const newHeight = event.data.height + 'px';
                 iframe.style.height = newHeight;
                 communityBox.style.height = newHeight;

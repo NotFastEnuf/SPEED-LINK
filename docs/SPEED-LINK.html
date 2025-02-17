@@ -291,12 +291,16 @@
     </div>
     <script>
         // Trigger on load and on resize
-        const updateHeight = () => {
+        (() => {
         const contentHeight = document.body.scrollHeight;
         const message = { height: contentHeight };
-        window.parent.postMessage(message, '*'); // Replace '*' with the specific origin if needed
-        console.log('Message posted:', message);
-        };
+
+        // Post message with a small delay
+        setTimeout(() => {
+            window.parent.postMessage(message, '*'); // Replace '*' with the specific origin if needed
+            console.log('Message posted:', message);
+        }, 100); // Adjust delay if needed
+        })();
       </script>
 </body>
 </html>

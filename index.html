@@ -676,18 +676,9 @@
         };
 
 
-
-        function waitForIframeAndAttachListener() {
-        const iframe = document.querySelector('#project-highlights-container iframe');
-        const communityBox = document.querySelector('.community-box');
-        if (iframe && communityBox) {
-            window.addEventListener('message', event => {
+        window.addEventListener('message', event => {
             console.log('Received message:', event.data);
-            });
-        } else {
-            setTimeout(waitForIframeAndAttachListener, 100); // Check again after 100ms
-        }
-        }
+        });
     </script>
 </body>
 

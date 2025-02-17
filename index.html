@@ -681,12 +681,12 @@
         const communityBox = document.querySelector('.container .community-box');
 
         window.addEventListener('message', event => {
-            if (event.source === iframe.contentWindow && event.data.height) {
+            //if (event.source === iframe.contentWindow && event.data.height) {
                 console.log('Received message:', event.data);
                 const newHeight = event.data.height + 'px';
                 iframe.style.height = newHeight;
                 communityBox.style.height = newHeight;
-            }
+            //}
         });
     </script>
 </body>

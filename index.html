@@ -676,23 +676,10 @@
         };
 
 
-        window.addEventListener('message', event => {
-            console.log('Received message:', event.data);
-            console.log('Event Origin:', event.origin); // Log the origin to see what the browser is sending
-
-            // Check the origin EXACTLY (case-sensitive, including trailing slash)
-            if (event.origin === 'https://notfastenuf.github.io/SPEED-LINK/') { // Exactly match!
-                console.log("Origin Matched!");
-                // Now, process the message
-                if (typeof event.data === 'object' && event.data.height) { // Check if it's the expected message format
-                    const iframe = document.getElementById('yourIframeId'); // Make sure you have the correct iframe ID
-                    if (iframe) {
-                        iframe.style.height = event.data.height + 'px';
-                    }
-                }
-            } else {
-                console.warn('Message received from unexpected origin:', event.origin);
-            }
+        console.log("This is a test...");
+        window.addEventListener('message', function(event) {
+            console.log("Message received!");
+            console.log(event.data);
         });
     </script>
 </body>

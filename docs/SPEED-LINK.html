@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Creation Guide - Makerspace Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #4CAF50;
+        }
+
+        code {
+            background: #f9f9f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        a {
+            color: #4CAF50;
+        }
+
+        .step {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Content Creation Guide for a Makerspace Hub</h1>
+        <p>
+            This guide will walk you through creating a simple makerspace hub with a self-updating 
+            and self-sorting <strong>Dynamic Project Highlights Feature</strong>. Follow these steps to replicate 
+            this key element in your makerspace hub!</p>
+
+        <h2>Like a Leaderboard for Maker Projects!</h2>
+        <p>
+            Let's face it, what maker has time to keep a website up to date every time a change is made to a project? With the <strong>Dynamic Project Highlights Feature</strong>,
+            your website will update itself any time you or another creator updates a project that you are tracking!    You fill out a content card once for any public github project,
+            and a handy script goes to work behind the scenes extracting and sorting information from the github api.                        
+            The script will populate project descriptions, embed a hyperlink back to the project repository,
+            or detect that the project has a github pages website and will award a special notification badge and link there instead.
+            Finally it will check for any recent commits on the main branch and automatically
+            sort the displayed project cards, placing the most recently updated projects at the top of the list!
+         </p>
+          
+        <h2>Step 1: Set Up Your GitHub Repository</h2>
+        <div class="step">
+            <p>Create a new repository on GitHub for your makerspace hub website. Name it something like <code>makerspace-hub</code>.</p>
+            <ul>
+                <li>Clone the repository to your local machine and make an initial commit.</li>
+                <li>Enable GitHub Pages for your repository by going to the "Settings" tab and then to the "Pages" section.  There you will set the Build and Deployment publishing source to the root folder (/).</li>
+            </ul>
+        </div>
+
+        <h2>Step 2: Create a Static Homepage</h2>
+        <div class="step">
+            <p>Design a simple homepage using HTML and CSS. Here's an example structure:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;title&gt;Makerspace Hub&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to Makerspace Hub&lt;/h1&gt;
+    &lt;p&gt;Your gateway to open-source projects and maker community resources.&lt;/p&gt;
+    &lt;a href="https://notfastenuf.github.io/docs/MakerspaceHubTutorial">Documentation&lt;/a&gt; <!-- Link to this guide -->
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+
+        <h2>Step 3: Add Dynamic Project Highlights</h2>
+        <div class="step">
+            <p>The project highlights section dynamically fetches data from GitHub repositories using JavaScript.</p>
+<pre><code>
+    // List of project repositories - Add new Highlighted Projects Here!!!!
+    const repositories = [
+        {
+            name: 'Microsoft VS Code',
+            owner: 'microsoft',
+            repo: 'vscode',
+            category: 'bus'
+        },
+        {
+            name: 'Bootstrap - Frontend web development toolkit',
+            owner: 'twbs',
+            repo: 'bootstrap',
+            category: 'ship'
+        },
+        {
+            name: 'Speed Link - GPS Speed Tracker for RC Racing',
+            owner: 'NotFastEnuf',
+            repo: 'SPEED-LINK',
+            category: 'car'
+        },
+        {
+            name: 'Academic Personal Website Template',
+            owner: 'academicpages',
+            repo: 'academicpages.github.io',
+            category: 'train'
+        }
+    ];
+    
+    const categoryIcons = {
+        airplane: '✈️',
+        drone: '🚁',
+        car: '🚗',
+        bicycle: '🚲',
+        bus: '🚌',
+        motorcycle: '🏍️',
+        rocket: '🚀',
+        ship: '🚢',
+        train: '🚂',
+        truck: '🚚',
+        subway: '🚇',
+        taxi: '🚕'
+    };
+    
+    async function fetchProjectData() {
+        // Create an array of promises to fetch data for each project.
+        const promises = repositories.map(async (repo) => {
+            try {
+                const repoUrl = `https://api.github.com/repos/${repo.owner}/${repo.repo}`;
+                const repoResponse = await fetch(repoUrl);
+                const repoData = await repoResponse.json();
+    
+                // Check for GitHub Pages URL using the api.
+                let pagesUrl = null;
+                if (!pagesUrl && repoData.has_pages) {
+                    pagesUrl = `https://${repo.owner}.github.io/${repo.repo}`;
+                }
+    
+                return {
+                    ...repo,
+                    description: repoData.description || 'No description available',
+                    lastUpdated: new Date(repoData.pushed_at).toLocaleDateString(),
+                    icon: categoryIcons[repo.category] || '🚀',
+                    repoUrl: repoData.html_url,
+                    pagesUrl: pagesUrl,
+                    ownerName: repoData.owner.name || repo.owner
+                };
+            } catch (error) {
+                console.error(`Error fetching data for ${repo.repo}:`, error);
+                return {
+                    ...repo,
+                    description: 'Failed to load project data',
+                    lastUpdated: 'Unknown',
+                    icon: categoryIcons[repo.category] || '🚀',
+                    repoUrl: `https://github.com/${repo.owner}/${repo.repo}`,
+                    pagesUrl: null,
+                    ownerName: repo.owner
+                };
+            }
+        });
+    
+        try {
+            const fetchedProjects = await Promise.all(promises);
+            // Sort projects so the most recently updated comes first.
+            fetchedProjects.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+    
+            // Get the container where we want to insert the cards.
+            const container = document.getElementById('project-highlights-container');
+            // Clear any existing content.
+            container.innerHTML = '';
+    
+            // Create a card for each fetched project.
+            fetchedProjects.forEach(project => {
+                const card = document.createElement('div');
+                card.classList.add('project-highlight');
+    
+                // Icon container
+                const iconContainer = document.createElement('div');
+                iconContainer.classList.add('icon-container');
+                iconContainer.innerHTML = project.icon;
+                card.appendChild(iconContainer);
+    
+                // Title and project link
+                const title = document.createElement('h3');
+                const link = document.createElement('a');
+                link.href = project.pagesUrl ? project.pagesUrl : project.repoUrl;
+                link.target = '_blank';
+                link.textContent = project.name;
+                title.appendChild(link);
+    
+                // Add GitHub Pages indicator if a Pages site exists.
+                if (project.pagesUrl) {
+                    const pagesBadge = document.createElement('small');
+                    pagesBadge.classList.add('pages-badge');
+                    pagesBadge.textContent = "GitHub Pages";
+                    title.appendChild(pagesBadge);
+                }
+                card.appendChild(title);
+    
+                // Description
+                const description = document.createElement('p');
+                description.textContent = project.description;
+                card.appendChild(description);
+    
+                // Creator information
+                const creator = document.createElement('p');
+                creator.classList.add('creator');
+                creator.textContent = `Project Creator: ${project.ownerName}`;
+                card.appendChild(creator);
+    
+                // Last updated date
+                const date = document.createElement('p');
+                date.classList.add('date');
+                date.textContent = `Last Updated: ${project.lastUpdated}`;
+                card.appendChild(card);
+    
+                // Append the completed card to the container.
+                container.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Error updating projects:', error);
+        }
+    }
+    
+    // Start fetching project data when the DOM is fully loaded.
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchProjectData();
+    });
+    </code></pre>
+<p>Add a container in your HTML for the fetched projects:</p>
+<pre><code>&lt;div id="project-highlights"&gt;
+    &lt;!-- Project cards will be dynamically inserted here --&gt;
+    &lt;div id="project-highlights-container"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<p>This will dynamically sort, link, and display project details from each of the project cards you add to your makerspace hub.</p>
+        </div>
+
+        <h2>Step 4: Style Your Website</h2>
+        <div class="step">
+            <p>Use CSS to style your page and project highlights section. For example:</p>
+<pre><code>#project-highlights div {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.pages-badge {
+    background-color: #007acc;
+    color: #fff;
+    margin-left: 10px;
+    padding: 2px 5px;
+    font-size: 0.8em;
+    border-radius: 3px;
+}</code></pre>
+<p>You can customize the styles to fit your makerspace's branding.</p>
+        </div>
+
+        <h2>Step 5: Deploy and Share</h2>
+        <div class="step">
+            <p>Save this file as <code>index.html</code> in the directory root, push your changes to GitHub, and share your website's URL with your community!</p>
+            <ul>
+                <li>Your site will be live at <code>https://username.github.io/makerspace-hub/</code>.</li>
+                <li>Encourage others to contribute and create.</li>
+            </ul>
+        </div>
+
+        <h2>Conclusion</h2>
+        <p>Congratulations! You've created a makerspace hub website with dynamic project highlights. Feel free to expand on this guide by adding more features like tutorials, community resources, or event announcements.</p>
+
+        <a href="https://notfastenuf.github.io/">Back to Makerspace Hub</a>
+    </div>
+</body>
+</html>

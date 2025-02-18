@@ -674,7 +674,11 @@
                 });
             }
         };
-
+        console.log("This is a test...");
+        window.addEventListener('message', function(event) {
+            console.log("Message received!");
+            console.log(event.data);
+        });
     </script>
 </body>
 

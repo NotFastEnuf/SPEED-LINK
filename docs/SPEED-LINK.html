@@ -303,6 +303,13 @@
             window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io/SPEED-LINK/"); // Correct origin!
             console.log("Height message sent:", contentHeight);
         }
+
+        setTimeout(function() {
+            const contentHeight = document.body.scrollHeight;
+            window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io");
+            console.log("Height message sent:", contentHeight);
+        }, 500); // 500ms delay
+
     </script>
 </body>
 </html>

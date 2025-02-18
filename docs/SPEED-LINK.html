@@ -290,12 +290,19 @@
         <a href="https://notfastenuf.github.io/">Back to Makerspace Hub</a>
     </div>
     <script>
-        // Test Send Message
-
-        setTimeout(function() {
-            window.parent.postMessage("Hello from iframe", "https://notfastenuf.github.io/SPEED-LINK/"); // Replace with the actual file path
-        }, 500);
-
-      </script>
+        window.addEventListener('load', function() {
+            sendHeight(); // Send initial height after load
+        });
+    
+        // Send height whenever content changes (using MutationObserver)
+        const observer = new MutationObserver(sendHeight);
+        observer.observe(document.body, { childList: true, subtree: true }); // Observe changes to body's content
+    
+        function sendHeight() {
+            const contentHeight = document.body.scrollHeight; // Or document.documentElement.scrollHeight for better cross-browser
+            window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io/SPEED-LINK/"); // Correct origin!
+            console.log("Height message sent:", contentHeight);
+        }
+    </script>
 </body>
 </html>

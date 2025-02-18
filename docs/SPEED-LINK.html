@@ -298,15 +298,9 @@
         const observer = new MutationObserver(sendHeight);
         observer.observe(document.body, { childList: true, subtree: true }); // Observe changes to body's content
     
-        function sendHeight() {
+        setTimeout(function sendHeight() {
             const contentHeight = document.body.scrollHeight; // Or document.documentElement.scrollHeight for better cross-browser
             window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io/SPEED-LINK/"); // Correct origin!
-            console.log("Height message sent:", contentHeight);
-        }
-
-        setTimeout(function() {
-            const contentHeight = document.body.scrollHeight;
-            window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io");
             console.log("Height message sent:", contentHeight);
         }, 500); // 500ms delay
 

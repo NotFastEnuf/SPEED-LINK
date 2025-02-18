@@ -289,19 +289,26 @@
 
         <a href="https://notfastenuf.github.io/">Back to Makerspace Hub</a>
     </div>
+    
     <script>
+
         window.addEventListener('load', function() {
             sendHeight(); // Send initial height after load
         });
-    
+
         // Send height whenever content changes (using MutationObserver)
         const observer = new MutationObserver(sendHeight);
         observer.observe(document.body, { childList: true, subtree: true }); // Observe changes to body's content
-    
-        setTimeout(function sendHeight() {
+
+        function sendHeight() {
             const contentHeight = document.body.scrollHeight; // Or document.documentElement.scrollHeight for better cross-browser
-            window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io/SPEED-LINK/"); // Correct origin!
+            window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io"); // Correct origin!
             console.log("Height message sent:", contentHeight);
+        }
+
+
+        setTimeout(function() { // Anonymous function
+            sendHeight();
         }, 500); // 500ms delay
 
     </script>

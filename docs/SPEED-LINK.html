@@ -289,7 +289,7 @@
 
         <a href="https://notfastenuf.github.io/">Back to Makerspace Hub</a>
     </div>
-    
+
     <script>
 
         window.addEventListener('load', function() {
@@ -299,6 +299,9 @@
         // Send height whenever content changes (using MutationObserver)
         const observer = new MutationObserver(sendHeight);
         observer.observe(document.body, { childList: true, subtree: true }); // Observe changes to body's content
+
+        // Send height on resize
+        window.addEventListener('resize', sendHeight);
 
         function sendHeight() {
             const contentHeight = document.body.scrollHeight; // Or document.documentElement.scrollHeight for better cross-browser

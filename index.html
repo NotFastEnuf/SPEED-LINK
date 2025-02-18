@@ -674,10 +674,45 @@
                 });
             }
         };
-        console.log("This is a test...");
-        window.addEventListener('message', function(event) {
-            console.log("Message received!");
-            console.log(event.data);
+
+
+
+        window.addEventListener('message', event => {
+            // 1. Origin Check (CRITICAL!)
+            if (event.origin === "https://notfastenuf.github.io/SPEED-LINK/") { // EXACT match!
+
+                // 2. Iframe and Container Selection
+                const iframe = document.querySelector('.community-box iframe'); // More specific selector
+                const communityBox = document.querySelector('.community-box');
+
+                // 3. Source Check (Less Reliable but an additional precaution)
+                if (iframe && event.source === iframe.contentWindow) {
+
+                    // 4. Data Check
+                    if (typeof event.data === 'object' && event.data.height) {
+                        const newHeight = event.data.height + 'px';
+
+                        // 5. Set Heights (with error handling)
+                        try {
+                            iframe.style.height = newHeight;
+                            communityBox.style.height = newHeight;
+                            console.log("Iframe and container heights set to:", newHeight);
+                        } catch (error) {
+                            console.error("Error setting heights:", error);
+                        }
+                    } else {
+                        console.warn("Received message with unexpected data format:", event.data);
+                    }
+
+                } else if (iframe) {
+                    console.warn("Message received from unexpected source (iframe mismatch).");
+                } else {
+                    console.warn("Iframe element not found.");
+                }
+
+            } else {
+                console.warn("Message received from unexpected origin:", event.origin);
+            }
         });
     </script>
 </body>

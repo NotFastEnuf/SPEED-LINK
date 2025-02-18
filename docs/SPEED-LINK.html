@@ -303,6 +303,11 @@
             window.parent.postMessage({ height: contentHeight }, "https://notfastenuf.github.io/SPEED-LINK/"); // Correct origin!
             console.log("Height message sent:", contentHeight);
         }
+
+        setTimeout(function() {
+            window.parent.postMessage("Hello from iframe", "https://notfastenuf.github.io/SPEED-LINK/"); // Replace with the actual file path
+        }, 500);
+        
     </script>
 </body>
 </html>

@@ -1,0 +1,57 @@
+
+                  <!DOCTYPE html>
+                  <html>
+                    <head>
+                      <meta charset="UTF-8">
+                      <title>Project Documentation</title>
+                      <script src="https://cdn.tailwindcss.com"></script>
+                      <style>
+                        /* Base styles */
+                        body { margin: 0; padding: 20px; font-family: system-ui, sans-serif; }
+                        .prose { max-width: 8.5in; margin: auto; }
+                        img, video { max-width: 100%; height: auto; border-radius: 0.5rem; }
+                      </style>
+                      <script type="application/json" id="tempo-project-data">
+                        {"version":"1.0","metadata":{"name":"Assembly Guide","updatedAt":"2025-02-18T20:25:27.471Z"},"content":{"steps":[{"id":"1","fields":[{"id":"f12","type":"title","content":"Required Components"},{"id":"f13","type":"text","content":"Wemos D1 Mini (ESP8266 board)\nNEO-6M/7M GPS module\n3-wire servo cable (JST-ZH 1.5mm or standard)\nVelcro strap & heat shrink tubing (40mm diameter)"}]},{"id":"1739907905664","fields":[{"id":"f1739907905664-1","type":"title","content":"Wire Connections"},{"id":"f1739907905664-2","type":"text","content":"GPS TX → Wemos D1 Mini D4 (Serial RX)\nGPS V+ → Wemos D1 Mini 5V (V+)\nGPS V- → Wemos D1 Mini GND (V-)\nServo Cable Red → Wemos D1 Mini 5V (V+)\nServo Cable Black → Wemos D1 Mini GND (V-)"}]},{"id":"1739909074152","fields":[{"id":"f1739909074152-1","type":"title","content":"Final Assembly"},{"id":"f1739909074152-2","type":"text","content":"Stack the gps module atop the Wemos development board and affix with foam tape.  Slide the assembly along with a velcro strap into heat shrink tube (leave USB exposed).  Use heat gun until tightly sealed.\nPRO TIP:  Add a battery shield and 3d printed case for the ultimate SPEED_LINK build!"}]},{"id":"1739910039825","fields":[{"id":"f1739910039825-1","type":"title","content":"Download Firmware"},{"id":"f1739910039825-2","type":"text","content":"The latest binary can be downloaded from the project's releases page"}]},{"id":"1739910141605","fields":[{"id":"f1739910141605-1","type":"title","content":"Flash Firmware"},{"id":"f1739910141605-2","type":"text","content":"Connect the SPEED-LINK module to USB.  Flash the downloaded binary using the ESP Web Flasher.  Default settings are fine."},{"id":"f1739910263458","type":"video","content":"https://esp.huhn.me/","width":800,"height":450,"embedUrl":"https://esp.huhn.me/"}]}]}}
+                      </script>
+                    </head>
+                    <body>
+                      <div class="prose">
+                        
+      <div class="max-w-[8.5in] mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Assembly Guide</h1>
+        
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Step 1: Required Components</h2><p class="mb-4 whitespace-pre-wrap">Wemos D1 Mini (ESP8266 board)
+NEO-6M/7M GPS module
+3-wire servo cable (JST-ZH 1.5mm or standard)
+Velcro strap & heat shrink tubing (40mm diameter)</p>
+          </div>
+        
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Step 2: Wire Connections</h2><p class="mb-4 whitespace-pre-wrap">GPS TX → Wemos D1 Mini D4 (Serial RX)
+GPS V+ → Wemos D1 Mini 5V (V+)
+GPS V- → Wemos D1 Mini GND (V-)
+Servo Cable Red → Wemos D1 Mini 5V (V+)
+Servo Cable Black → Wemos D1 Mini GND (V-)</p>
+          </div>
+        
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Step 3: Final Assembly</h2><p class="mb-4 whitespace-pre-wrap">Stack the gps module atop the Wemos development board and affix with foam tape.  Slide the assembly along with a velcro strap into heat shrink tube (leave USB exposed).  Use heat gun until tightly sealed.
+PRO TIP:  Add a battery shield and 3d printed case for the ultimate SPEED_LINK build!</p>
+          </div>
+        
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Step 4: Download Firmware</h2><p class="mb-4 whitespace-pre-wrap">The latest binary can be downloaded from the project's releases page</p>
+          </div>
+        
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Step 5: Flash Firmware</h2><p class="mb-4 whitespace-pre-wrap">Connect the SPEED-LINK module to USB.  Flash the downloaded binary using the ESP Web Flasher.  Default settings are fine.</p><iframe src="https://esp.huhn.me/" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg mb-4" style="max-width: 100%; width: 800px; height: 450px;"></iframe>
+          </div>
+        
+      </div>
+    
+                      </div>
+                    </body>
+                  </html>
+                

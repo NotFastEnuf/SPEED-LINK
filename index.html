@@ -299,7 +299,41 @@
         }
 
         #project-highlights-container {
-            height: 99%;
+            height: 60vh;
+            background: papayawhip;
+            /*background: #f4f4f4;*/
+            margin-bottom: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        #project-highlights-container2 {
+            height: 60vh;
+            background: papayawhip;
+            /*background: #f4f4f4;*/
+            margin-bottom: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        #project-highlights-container3 {
+            height: 60vh;
+            background: papayawhip;
+            /*background: #f4f4f4;*/
+            margin-bottom: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
             display: flex;
             flex-direction: column;
             border-radius: 8px;
@@ -313,42 +347,20 @@
             flex: 1;
         }
 
-        /* Hide Scrollbar on iframe */
-        html::-webkit-scrollbar {
-            width: 0; /* For WebKit-based browsers (Chrome, Safari, Opera) */
+        #project-highlights-container2 iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            flex: 1;
         }
 
-        html {
-            -ms-overflow-style: none; /* For Internet Explorer and Edge */
-            scrollbar-width: none; /* For Firefox */
+        #project-highlights-container3 iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            flex: 1;
         }
-        #project-highlights-container::-webkit-scrollbar {
-            width: 0; /* For WebKit-based browsers (Chrome, Safari, Opera) */
-        }
-
-        #project-highlights-container {
-            -ms-overflow-style: none; /* For Internet Explorer and Edge */
-            scrollbar-width: none; /* For Firefox */
-        }
-
-        /* For WebKit browsers (Chrome, Safari) */
-        /*#project-highlights-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #project-highlights-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        #project-highlights-container::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-
-        #project-highlights-container::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }*/
-
+        
 
         /* Footer *******************************************************************************************************************************************************/
         .call-to-action {
@@ -446,7 +458,7 @@
                     <h1><i class="fas fa-microchip"></i> Makerspace Hub</h1>
                     <p>Open Source | Collaborative | Innovative</p>
                 </div>
-                <p> <a class="btn" onclick="showModal('projects')">Get Involved</a>
+                <p> <a class="btn" onclick="showModal('get-involved')">Get Involved</a>
                     &nbsp;&nbsp; 
                     <a href="https://www.paypal.me/NotFastEnuf" target="_blank">Support Me</a> 
                     &nbsp;&nbsp;
@@ -472,7 +484,7 @@
     <!-- Dark Section -->
     <div class="dark-section">
         <div class="content-overlay">
-            <a href="#.community-box" class="feature-card">
+            <a href="#project-highlights-container" class="feature-card">
                 <h2><i class="fa fa-location-dot"></i> GPS SPEED TRACKER</h2>
                 <p>and RC Drag Racing Data Analyzer</p>
             </div>
@@ -489,10 +501,9 @@
     <!-- Dark Section -->
     <div class="dark-section">
         <div class="content-overlay">
-            <a href="#community-box" class="feature-card">
-                <h2><i class="fas fa-robot"></i> FEATURES</h2>
-                <p>2.4ghz Wireless Interface, LIVE Streaming Speed and GPS Data, Top Speed Recording, Trip Odometer, Elevation Change</p>
-                <p>COMPETE AGAINST A DRAG RACING LIGHT TREE - SUPPORTS CUSTOM RACE DISTANCES  - GET THE FASTEST TIME SLIP!</p>
+            <a href="#project-highlights-container2" class="feature-card">
+                <h2><i class="fas fa-robot"></i> Easy to Use</h2>
+                <p>2.4ghz WIRELESS INTERFACE   -   LIVE DATA   -   TOP SPEED RECORDING   -   CUSTOM RACE DISTANCES</p>
             </div>
         </div>
     </div>
@@ -507,9 +518,9 @@
     <!-- Dark Section -->
     <div class="dark-section">
         <div class="content-overlay">
-            <a href="#community-box" class="feature-card">
+            <a href="#project-highlights-container3" class="feature-card">
                 <h2><i class="fas fa-code"></i> Open Source</h2>
-                <p>Easy to follow OPEN SOURCE tutorial and design.  Follow along to make or customize your SPEED-LINK now!</p>
+                <p>Completely OPEN SOURCE tutorial and design.  Follow along to make your SPEED-LINK now!</p>
             </div>
         </div>
     </div>
@@ -527,27 +538,16 @@
         </div>
     </div>
 
-    <div id="rapid-prototyping" class="modal">
+    <div id="get-involved" class="modal">
         <div class="modal-content">
-            <i class="fas fa-times modal-close" onclick="hideModal('rapid-prototyping')"></i>
-            <h2><i class="fas fa-cube"></i> Rapid Prototyping</h2>
+            <i class="fas fa-times modal-close" onclick="hideModal('get-involved')"></i>
+            <h2><i class="fas fa-robot"></i> Get Involved</h2>
             <ul>
-                <li>Connect, collaborate, browse, or share on the <a href="https://example.com" target="_blank">Makerspace Hub
+                <li><a href="https://example.com" target="_blank">Connect, collaborate, browse, or share on the Makerspace Hub
                         Discord</a></li>
-                <li>Contact <a href="mailto://travis.schrock@outlook.com" target="_blank">NotFastEnuf</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="projects" class="modal">
-        <div class="modal-content">
-            <i class="fas fa-times modal-close" onclick="hideModal('projects')"></i>
-            <h2><i class="fas fa-robot"></i> Featured Projects and Tutorials</h2>
-            <ul>
-                <li>Coming Soon!!!</li>
-                <li>A curated list of NFE Original Tutorials</li>
-                <li><a href="https://notfastenuf.github.io/docs/MakerspaceHubTutorial" target="_blank">Create your own
-                        self-updating Makerspace Hub website</a></li>
+                <li><a href="mailto://travis.schrock@outlook.com" target="_blank">Email NotFastEnuf</a></li>
+                <li><a href="https://notfastenuf.github.io" target="_blank">Find more projects and tutorials at NotFastEnuf's Makerspace Hub website</a></li>
+                <li><a class="btn" onclick="showModal('open-source')">Other places to find NotFastEnuf</a></li>
             </ul>
         </div>
     </div>
@@ -569,7 +569,13 @@
     <div class="community-box">
         <h2><i class="fas fa-users"></i> SPEED-LINK Project Documentation</h2>
         <div id="project-highlights-container">
-            <iframe src="https://notfastenuf.github.io/SPEED-LINK/docs/SPEED-LINK" title="SPEED-LINK Documentation"></iframe>
+            <iframe src="https://notfastenuf.github.io/SPEED-LINK/docs/overview" title="SPEED-LINK Documentation"></iframe>
+        </div>
+        <div id="project-highlights-container2">
+            <iframe src="https://notfastenuf.github.io/SPEED-LINK/docs/operation" title="SPEED-LINK Documentation"></iframe>
+        </div>
+        <div id="project-highlights-container3">
+            <iframe src="https://notfastenuf.github.io/SPEED-LINK/docs/assembly" title="SPEED-LINK Documentation"></iframe>
         </div>
     </div>
 
@@ -577,7 +583,7 @@
     <div class="call-to-action">
         <h2>Join the Movement</h2>
         <p>Contribute, collaborate, and create with us!</p>
-        <a class="btn" onclick="showModal('projects')">Get Started</a>
+        <a class="btn" onclick="showModal('get-involved')">Get Started</a>
         <a href="https://www.paypal.me/NotFastEnuf" class="btn">Support Me</a>
         <div class="social-icons">
             <a href="https://github.com/NotFastEnuf"><i class="fab fa-github"></i></a>
@@ -589,8 +595,8 @@
 
     <div class="footer" onclick="scrollToTop()" style="cursor: pointer;"></div>
     <div class="hit-counter">
-        <script type="text/javascript" src="https://freehitcounters.org/count/hacj"></script><br>
-        <script type='text/javascript' src='https://www.whomania.com/ctr?id=595b28785a6972821d552cf4321e07cbb1b95e04'></script>
+        <script type="text/javascript" src="https://freehitcounters.org/count/hark"></script><br>
+        <a href='https://www.acadoo.de/leistungen/ghostwriter-doktorarbeit/'>Dissertation schreiben lassen</a> <script type='text/javascript' src='https://www.whomania.com/ctr?id=4789aa22ce98fe9d84dd9f86bbbe62afc4079ed3'></script>
     </div>
     
 
@@ -599,20 +605,28 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        const featureCards = Array.from(document.querySelectorAll('a.feature-card'));
-        const communityBoxElement = document.querySelector('.community-box');
+        //adds smooth scroll links to feature cards
+        const featureCards = document.querySelectorAll('.feature-card');
 
-        if (communityBoxElement) {
         featureCards.forEach(card => {
             card.addEventListener('click', function(event) {
-            event.preventDefault();
-            communityBoxElement.scrollIntoView({
-                behavior: 'smooth'
-            });
+                event.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    const targetPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = targetPosition + window.pageYOffset - (window.innerHeight * 0.12);
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
-        }
-        
+
         // Series of functions for scroll effect to wipe up feature cards over background video with sticky effect to header
         function isContentOverlayCentered(featureSection, contentOverlay) {
             if (!featureSection || !contentOverlay) return false;
@@ -692,50 +706,6 @@
             }
         };
 
-
-
-        window.addEventListener('message', event => {
-            // 1. Origin Check (CRITICAL!)
-            if (event.origin === "https://notfastenuf.github.io") { // EXACT match!
-
-                // 2. Iframe and Container Selection
-                const iframe = document.querySelector('.community-box iframe'); // More specific selector
-                const communityBox = document.querySelector('.community-box');
-
-                // 3. Source Check (Less Reliable but an additional precaution)
-                if (iframe && event.source === iframe.contentWindow) {
-
-                    // 4. Data Check
-                    if (typeof event.data === 'object' && event.data.height) {
-                        let newHeight = event.data.height;
-
-                        // 5. Add Margin (Adjust as needed)
-                        const margin = 165; // Example margin in pixels
-                        newHeight += margin;  // Add the margin to the new height
-                        newHeight += 'px'; // Add the px
-
-                        // 6. Set Heights (with error handling)
-                        try {
-                            //iframe.style.height = newHeight;
-                            communityBox.style.height = newHeight;
-                            console.log("Iframe and container heights set to:", newHeight);
-                        } catch (error) {
-                            console.error("Error setting heights:", error);
-                        }
-                    } else {
-                        console.warn("Received message with unexpected data format:", event.data);
-                    }
-
-                } else if (iframe) {
-                    console.warn("Message received from unexpected source (iframe mismatch).");
-                } else {
-                    console.warn("Iframe element not found.");
-                }
-
-            } else {
-                console.warn("Message received from unexpected origin:", event.origin);
-            }
-        });
     </script>
 </body>
 
